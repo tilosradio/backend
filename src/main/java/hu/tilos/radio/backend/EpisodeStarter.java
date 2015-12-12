@@ -66,7 +66,7 @@ public class EpisodeStarter {
             @Override
             protected void configure() {
                 bind(DB.class).toProvider(MongoProducer.class);
-                bind(DozerBeanMapper.class).toProvider(DozerFactory.class).asEagerSingleton();
+                bind(DozerBeanMapper.class).toProvider(EpisodeDozerFactory.class).asEagerSingleton();
                 bind(Validator.class).toProvider(ValidatorProducer.class);
                 bindListener(Matchers.any(), new GuiceConfigurationListener());
                 bind(Integer.class).toInstance(1);
