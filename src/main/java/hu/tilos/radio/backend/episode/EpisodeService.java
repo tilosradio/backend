@@ -51,6 +51,22 @@ public class EpisodeService {
         return r;
     }
 
+    public List<EpisodeData> listEpisodes(String showAlias, long from, long to) {
+        Date fromDate = new Date();
+        fromDate.setTime(from);
+        Date toDate = new Date();
+        toDate.setTime(to);
+        List<EpisodeData> episodeData = episodeUtil.getEpisodeData(showAlias, fromDate, toDate);
+        Collections.sort(episodeData, new Comparator<EpisodeData>() {
+            @Override
+            public int compare(EpisodeData e1, EpisodeData e2) {
+                return e1.getPlannedFrom().compareTo(e2.getPlannedFrom()) * -1;
+            }
+        });
+        return episodeData;
+
+    }
+
     public List<EpisodeData> listEpisodes(long from, long to) {
         Date fromDate = new Date();
         fromDate.setTime(from);

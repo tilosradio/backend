@@ -119,6 +119,12 @@ public class EpisodeStarter {
                 spark.authorized(Role.AUTHOR, (req, res, session) ->
                         episodeService.update(req.params("id"), gson.fromJson(req.body(), EpisodeToSave.class))), jsonResponse);
 
+        get("/api/v1/show/:alias/episodes", (req, res) ->
+                episodeService.listEpisodes(req.params("alias"),
+                        Long.valueOf(req.queryParams("start")),
+                        Long.valueOf(req.queryParams("end"))
+                ), jsonResponse);
+
 
         get("/feed/weekly", (req, res) -> {
             res.type("application/atom+xml");
