@@ -92,7 +92,7 @@ public class EpisodeStarter {
 
         JsonTransformer jsonResponse = spark.getJsonTransformer();
 
-        gson = new GsonBuild-er()
+        gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonSerializer<Date>() {
                     @Override
                     public JsonElement serialize(Date src, Type type, JsonSerializationContext jsonSerializationContext) {
