@@ -1,7 +1,7 @@
 package hu.tilos.radio.backend;
 
 import akka.actor.ActorSystem;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -29,7 +29,9 @@ import spark.Response;
 import javax.inject.Inject;
 import javax.validation.Validator;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 import static spark.Spark.*;
 
@@ -89,6 +91,20 @@ public class EpisodeStarter {
         SparkDefaults spark = new SparkDefaults(portEpisode, injector);
 
         JsonTransformer jsonResponse = spark.getJsonTransformer();
+
+        gson = new GsonBuild-er()
+                .registerTypeAdapter(Date.class, new JsonSerializer<Date>() {
+                    @Override
+                    public JsonElement serialize(Date src, Type type, JsonSerializationContext jsonSerializationContext) {
+                        return src == null ? null : new JsonPrimitive(src.getTime());
+                    }
+                })
+                .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+                    @Override
+                    public Date deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+                        return json == null ? null : new Date(json.getAsLong());
+                    }
+                }).create();
 
 
         post("/api/v1/episode/:id/bookmark", spark.authorized(Role.ADMIN, (req, res, session) ->
