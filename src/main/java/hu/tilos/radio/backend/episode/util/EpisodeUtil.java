@@ -6,6 +6,8 @@ import com.mongodb.DB;
 import com.mongodb.DBRef;
 import hu.tilos.radio.backend.bookmark.BookmarkData;
 import hu.tilos.radio.backend.episode.EpisodeData;
+import hu.tilos.radio.backend.stat.ListenerStat;
+import hu.tilos.radio.backend.stat.StatService;
 import hu.tilos.radio.backend.text.TextData;
 import hu.tilos.radio.backend.util.ShowCache;
 import hu.tilos.radio.backend.util.TextConverter;
@@ -38,6 +40,9 @@ public class EpisodeUtil {
     private ExtraEpisodeProvider extraProvider;
 
     @Inject
+    StatService statService;
+
+    @Inject
     private Merger merger = new Merger();
 
     @Inject
@@ -52,6 +57,7 @@ public class EpisodeUtil {
     public EpisodeData enrichEpisode(EpisodeData r) {
         try {
             linkGenerator(r);
+            statCalculator(r);
             r.setShow(showCache.getShowSimple(r.getShow().getId()));
             if (r.getText() != null) {
                 if (r.getText().getFormat() == null) {
@@ -65,6 +71,13 @@ public class EpisodeUtil {
             throw ex;
         }
         return r;
+    }
+
+    private void statCalculator(EpisodeData episode) {
+        if (episode.getStatListeners() == null) {
+            ListenerStat listenerStat = statService.calculateListenerStats(episode);
+            episode.setStatListeners(listenerStat);
+        }
     }
 
     public List<EpisodeData> getEpisodeData(String showIdOrAlias, Date from, Date to) {
@@ -209,11 +222,11 @@ public class EpisodeUtil {
     private List<EpisodeData> filterToShow(String showIdOrAlias, List<EpisodeData> original) {
         if (showIdOrAlias != null) {
             return original.stream().filter(episodeData ->
-                            episodeData.getShow() != null &&
-                                    (
-                                            showIdOrAlias.equals(episodeData.getShow().getAlias())
-                                                    || showIdOrAlias.equals(episodeData.getShow().getId())
-                                    )
+                    episodeData.getShow() != null &&
+                            (
+                                    showIdOrAlias.equals(episodeData.getShow().getAlias())
+                                            || showIdOrAlias.equals(episodeData.getShow().getId())
+                            )
             ).collect(Collectors.toList());
         } else {
             return original;

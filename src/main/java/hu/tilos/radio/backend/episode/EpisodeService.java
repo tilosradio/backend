@@ -9,6 +9,8 @@ import hu.tilos.radio.backend.data.response.OkResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
+import hu.tilos.radio.backend.stat.ListenerStat;
+import hu.tilos.radio.backend.stat.StatService;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.tag.TagUtil;
 import hu.tilos.radio.backend.util.ShowCache;
@@ -37,6 +39,9 @@ public class EpisodeService {
 
     @Inject
     TagUtil tagUtil;
+
+    @Inject
+    StatService statService;
 
     @Inject
     DB db;
@@ -149,10 +154,10 @@ public class EpisodeService {
                     }
 
                 }
-//                if (current.getPlannedFrom().getTime() != prev.getPlannedTo().getTime()) {
-//                    i++;
-//                    printProblem("Overlapping episode", prev, current);
-//                }
+                if (current.getPlannedFrom().getTime() != prev.getPlannedTo().getTime()) {
+                    i++;
+                    printProblem("Overlapping episode", prev, current);
+                }
             }
             prev = current;
         }
@@ -318,6 +323,12 @@ public class EpisodeService {
 
         updateTags(objectToSave);
         DBObject original = db.getCollection("episode").findOne(aliasOrId(alias));
+
+
+        if (objectToSave.isInThePast()) {
+            original.put("statListeners", modelMapper.map(statService.calculateListenerStats(objectToSave), BasicDBObject.class));
+        }
+
         modelMapper.map(objectToSave, original);
         db.getCollection("episode").update(aliasOrId(alias), original);
         return new UpdateResponse(true);

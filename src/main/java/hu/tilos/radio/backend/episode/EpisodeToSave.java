@@ -4,21 +4,12 @@ import hu.tilos.radio.backend.show.ShowSimple;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.text.TextData;
 
-import java.util.Date;
 import java.util.List;
 
 
-public class EpisodeToSave {
+public class EpisodeToSave extends EpisodeBase {
 
     private List<TagData> tags;
-
-    private Date plannedFrom;
-
-    private Date plannedTo;
-
-    private Date realFrom;
-
-    private Date realTo;
 
     private ShowSimple show;
 
@@ -30,38 +21,6 @@ public class EpisodeToSave {
 
     public void setTags(List<TagData> tags) {
         this.tags = tags;
-    }
-
-    public Date getPlannedFrom() {
-        return plannedFrom;
-    }
-
-    public void setPlannedFrom(Date plannedFrom) {
-        this.plannedFrom = plannedFrom;
-    }
-
-    public Date getPlannedTo() {
-        return plannedTo;
-    }
-
-    public void setPlannedTo(Date plannedTo) {
-        this.plannedTo = plannedTo;
-    }
-
-    public Date getRealFrom() {
-        return realFrom;
-    }
-
-    public void setRealFrom(Date realFrom) {
-        this.realFrom = realFrom;
-    }
-
-    public Date getRealTo() {
-        return realTo;
-    }
-
-    public void setRealTo(Date realTo) {
-        this.realTo = realTo;
     }
 
     public ShowSimple getShow() {

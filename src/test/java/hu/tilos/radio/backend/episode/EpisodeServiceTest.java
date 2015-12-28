@@ -1,16 +1,13 @@
 package hu.tilos.radio.backend.episode;
 
 import com.github.fakemongo.junit.FongoRule;
-import com.google.inject.AbstractModule;
-import com.google.inject.matcher.Matchers;
-import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import hu.tilos.radio.backend.*;
+import hu.tilos.radio.backend.GuiceRunner;
+import hu.tilos.radio.backend.TestUtil;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.show.ShowSimple;
-import hu.tilos.radio.backend.spark.GuiceConfigurationListener;
 import hu.tilos.radio.backend.text.TextData;
 import org.dozer.DozerBeanMapper;
 import org.junit.Assert;
@@ -18,7 +15,6 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import javax.inject.Inject;
-import javax.validation.Validator;
 import java.text.SimpleDateFormat;
 
 import static hu.tilos.radio.backend.MongoTestUtil.loadFrom;
@@ -45,7 +41,27 @@ public class EpisodeServiceTest {
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void testGetWithStat() throws Exception {
+        //given
+        String showId = loadTo(fongoRule, "show", "show-3utas.json");
+        loadTo(fongoRule, "episode", "episode-episode2.json", showId);
+        loadTo(fongoRule, "stat_icecast", "stat-for-episode2.json", showId);
+
+        //when
+        EpisodeData episode = controller.get("2");
+
+        //then
+        Assert.assertNotNull(episode.getText());
+        Assert.assertEquals("Jo musor", episode.getText().getTitle());
+        Assert.assertNotNull(episode.getStatListeners());
+        Assert.assertEquals(126, episode.getStatListeners().getMax());
+
+        //TODO test should be timezone independent
+        //Assert.assertEquals("http://tilos.hu/mp3/tilos-20140411-100000-120000.m3u", episode.getM3uUrl());
+    }
+
+    @Test
+    public void testGetWithoutStat() throws Exception {
         //given
         String showId = loadTo(fongoRule, "show", "show-3utas.json");
         loadTo(fongoRule, "episode", "episode-episode2.json", showId);
@@ -56,10 +72,10 @@ public class EpisodeServiceTest {
         //then
         Assert.assertNotNull(episode.getText());
         Assert.assertEquals("Jo musor", episode.getText().getTitle());
-        //TODO test should be timezone independent
-        //Assert.assertEquals("http://tilos.hu/mp3/tilos-20140411-100000-120000.m3u", episode.getM3uUrl());
-    }
+        Assert.assertNotNull(episode.getStatListeners());
+        Assert.assertEquals(0, episode.getStatListeners().getMax());
 
+    }
 
     @Test
     public void testGetByDate() throws Exception {
@@ -143,6 +159,32 @@ public class EpisodeServiceTest {
         DBObject text = (DBObject) mEpisode.get("text");
         Assert.assertNotNull(text);
         Assert.assertEquals("ez jobb #kukac de a harom nincs @szemely is van", text.get("content"));
+
+
+    }
+
+
+    @Test
+    public void testUpdateEpisodeWithStats() throws Exception {
+        //given
+        String showId = loadTo(fongoRule, "show", "show-3utas.json");
+        String episodeId = loadTo(fongoRule, "episode", "episode-episode1.json", showId);
+        loadTo(fongoRule, "stat_icecast", "stat1.json");
+        loadTo(fongoRule, "stat_icecast", "stat2.json");
+
+
+        EpisodeToSave episode = mapper.map(controller.get(episodeId), EpisodeToSave.class);
+        episode.setText(new TextData());
+
+        episode.getText().setContent("ez jobb #kukac de a harom nincs @szemely is van");
+
+        //when
+        UpdateResponse createResponse = controller.update(episodeId, episode);
+
+        //then
+        DBObject mEpisode = fongoRule.getDB().getCollection("episode").findOne();
+        DBObject listeners = (DBObject) mEpisode.get("statListeners");
+        Assert.assertEquals(126, listeners.get("max"));
 
 
     }

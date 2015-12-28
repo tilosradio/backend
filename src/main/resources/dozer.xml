@@ -187,5 +187,10 @@
         </field>
     </mapping>
 
+    <mapping map-null="false">
+        <class-a map-get-method="get" map-set-method="put">org.bson.BSONObject</class-a>
+        <class-b>hu.tilos.radio.backend.stat.ListenerStat</class-b>
+    </mapping>
+
 
 </mappings>
