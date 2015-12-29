@@ -75,9 +75,15 @@ public class StatService {
 
         ListenerStat stat = new ListenerStat();
         for (DBObject o : stat_icecast.results()) {
-            stat.setMax((Integer) o.get("max"));
-            stat.setMin((Integer) o.get("min"));
-            stat.setMean((int) Math.round((Double) o.get("avg")));
+            if (o.get("max") != null) {
+                stat.setMax((Integer) o.get("max"));
+            }
+            if (o.get("min") != null) {
+                stat.setMin((Integer) o.get("min"));
+            }
+            if (o.get("avg")!=null) {
+                stat.setMean((int) Math.round((Double) o.get("avg")));
+            }
         }
         return stat;
     }

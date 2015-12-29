@@ -137,6 +137,10 @@
             <a key="show">this</a>
             <b>show</b>
         </field>
+        <field-exclude>
+            <a key="inThePast">this</a>
+            <b>inThePast</b>
+        </field-exclude>
     </mapping>
 
 
