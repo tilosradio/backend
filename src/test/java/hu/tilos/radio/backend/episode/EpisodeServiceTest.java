@@ -54,7 +54,7 @@ public class EpisodeServiceTest {
         Assert.assertNotNull(episode.getText());
         Assert.assertEquals("Jo musor", episode.getText().getTitle());
         Assert.assertNotNull(episode.getStatListeners());
-        Assert.assertEquals(126, episode.getStatListeners().getMax());
+        Assert.assertEquals(105, episode.getStatListeners().getMax());
 
         //TODO test should be timezone independent
         //Assert.assertEquals("http://tilos.hu/mp3/tilos-20140411-100000-120000.m3u", episode.getM3uUrl());
