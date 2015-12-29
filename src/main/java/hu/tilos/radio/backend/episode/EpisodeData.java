@@ -8,6 +8,7 @@ import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.text.TextData;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +29,11 @@ public class EpisodeData extends EpisodeBase {
     private boolean extra;
 
     private boolean original = true;
+
+    /**
+     * only fields are supported with gson!!
+     */
+    private String url;
 
     private Set<TagData> tags = new HashSet<>();
 
@@ -56,8 +62,11 @@ public class EpisodeData extends EpisodeBase {
         this.id = id;
     }
 
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-    public String getUrl() {
+    public String calculateUrl() {
         if (getPlannedFrom() != null && getShow() != null) {
             return "/episode/" + getShow().getAlias() + "/" + EpisodeUtil.YYYY_MM_DD.format(getPlannedFrom());
         } else {
@@ -65,6 +74,11 @@ public class EpisodeData extends EpisodeBase {
         }
     }
 
+    @Override
+    public void setPlannedFrom(Date plannedFrom) {
+        super.setPlannedFrom(plannedFrom);
+        url = calculateUrl();
+    }
 
     public ShowSimple getShow() {
         return show;
@@ -72,6 +86,7 @@ public class EpisodeData extends EpisodeBase {
 
     public void setShow(ShowSimple show) {
         this.show = show;
+        url = calculateUrl();
     }
 
     public boolean isPersistent() {
