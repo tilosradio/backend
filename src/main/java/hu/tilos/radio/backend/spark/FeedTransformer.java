@@ -1,13 +1,17 @@
 package hu.tilos.radio.backend.spark;
 
-import net.anzix.jaxrs.atom.Entry;
-import net.anzix.jaxrs.atom.Feed;
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import net.anzix.jaxrs.atom.*;
+import net.anzix.jaxrs.atom.Summary;
+import net.anzix.jaxrs.atom.itunes.*;
 import spark.ResponseTransformer;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
+import java.net.URI;
+import java.util.Date;
 import java.util.HashSet;
 
 public class FeedTransformer implements ResponseTransformer {
@@ -15,6 +19,7 @@ public class FeedTransformer implements ResponseTransformer {
 
     @Override
     public String render(Object model) throws Exception {
+        Marshaller marshaller = createMarshaller();
         Feed feed = (Feed) model;
         HashSet<Class> set = new HashSet<Class>();
         set.add(Feed.class);
@@ -26,18 +31,28 @@ public class FeedTransformer implements ResponseTransformer {
                 set.add(entry.getContent().getJAXBObject().getClass());
             }
         }
-        try {
-            JAXBContext ctx = JAXBContext.newInstance(Feed.class);
-            Marshaller marshaller = ctx.createMarshaller();
+        StringWriter w = new StringWriter();
+        marshaller.marshal(feed, w);
+        return w.toString();
+    }
 
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+    private Marshaller createMarshaller() throws JAXBException {
+        JAXBContext ctx = JAXBContext.newInstance(Feed.class);
 
-            StringWriter w = new StringWriter();
-            marshaller.marshal(model, w);
-            return w.toString();
-        } catch (JAXBException e) {
-            throw new RuntimeException("Unable to marshal: ", e);
-        }
+
+        Marshaller marshaller = ctx.createMarshaller();
+
+        NamespacePrefixMapper mapper = new NamespacePrefixMapper() {
+            public String getPreferredPrefix(String namespace, String s1, boolean b) {
+                if (namespace.equals("http://www.w3.org/2005/Atom")) return "atom";
+                else return s1;
+            }
+        };
+
+        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", mapper);
+        marshaller.setProperty("com.sun.xml.bind.indentString", "   ");
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        return marshaller;
 
     }
 }

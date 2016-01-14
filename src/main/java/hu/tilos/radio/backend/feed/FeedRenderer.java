@@ -4,6 +4,8 @@ import hu.tilos.radio.backend.Configuration;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import net.anzix.jaxrs.atom.*;
+import net.anzix.jaxrs.atom.itunes.Author;
+import net.anzix.jaxrs.atom.itunes.Duration;
 
 import javax.inject.Inject;
 import java.net.MalformedURLException;
@@ -52,8 +54,7 @@ public class FeedRenderer {
 
     public Feed generateFeed(List<EpisodeData> episodeData, String id, boolean prefixedWithShowName) {
         Feed feed = new Feed();
-        feed.setITunesAuthor("Tilos Radio");
-        feed.setLanguage("hu");
+        feed.getAnyOther().add(new Author("Tilos Radio"));
         try {
             feed.setId(new URI(id));
         } catch (URISyntaxException e) {
@@ -82,9 +83,9 @@ public class FeedRenderer {
                         e.setSummary(new Summary("adás archívum"));
                     }
 
-                    e.setITunesSummary(e.getSummary().getContent());
+                    e.getAnyOther().add(new net.anzix.jaxrs.atom.itunes.Summary(e.getSummary().getContent()));
 
-                    e.setITunesDuration((episode.getRealTo().getTime() - episode.getRealFrom().getTime()) / 100);
+                    e.getAnyOther().add(new Duration((episode.getRealTo().getTime() - episode.getRealFrom().getTime()) / 100));
 
                     e.setPublished(episode.getRealTo());
                     e.setUpdated(episode.getRealTo());
