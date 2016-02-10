@@ -1,10 +1,12 @@
 package hu.tilos.radio.backend.episode.util;
 
 import hu.tilos.radio.backend.episode.EpisodeData;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class Merger {
 
     public List<EpisodeData> merge(List<EpisodeData>... episodeLists) {

@@ -1,11 +1,11 @@
 package hu.tilos.radio.backend.feed;
 
 import com.mongodb.DB;
-import hu.tilos.radio.backend.Configuration;
+
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
-import hu.tilos.radio.backend.show.ShowSimple;
-import hu.tilos.radio.backend.show.ShowType;
+import hu.tilos.radio.backend.data.types.ShowSimple;
+import hu.tilos.radio.backend.data.types.ShowType;
 import net.anzix.jaxrs.atom.Feed;
 import net.anzix.jaxrs.atom.Link;
 import net.anzix.jaxrs.atom.MediaType;
@@ -13,6 +13,7 @@ import net.anzix.jaxrs.atom.itunes.Category;
 import net.anzix.jaxrs.atom.itunes.Explicit;
 import net.anzix.jaxrs.atom.itunes.Image;
 import org.dozer.DozerBeanMapper;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.inject.Inject;
 import java.net.URI;
@@ -38,7 +39,7 @@ public class FeedService {
     private FeedRenderer feedRenderer;
 
     @Inject
-    @Configuration(name = "server.url")
+    @Value("${server.url}")
     private String serverUrl;
 
     @Inject

@@ -1,6 +1,6 @@
 package hu.tilos.radio.backend.episode;
 
-import hu.tilos.radio.backend.show.ShowSimple;
+import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.text.TextData;
 

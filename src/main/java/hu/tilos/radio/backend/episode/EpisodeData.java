@@ -3,7 +3,7 @@ package hu.tilos.radio.backend.episode;
 
 import hu.tilos.radio.backend.bookmark.BookmarkData;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
-import hu.tilos.radio.backend.show.ShowSimple;
+import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.text.TextData;

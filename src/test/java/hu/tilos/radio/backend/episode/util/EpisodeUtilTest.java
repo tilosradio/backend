@@ -4,7 +4,6 @@ package hu.tilos.radio.backend.episode.util;
 import com.github.fakemongo.junit.FongoRule;
 import hu.tilos.radio.backend.GuiceRunner;
 import hu.tilos.radio.backend.episode.EpisodeData;
-import hu.tilos.radio.backend.episode.EpisodeGuiceRunner;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -18,8 +17,6 @@ import static hu.tilos.radio.backend.MongoTestUtil.loadTo;
 public class EpisodeUtilTest {
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @Rule
-    public GuiceRunner guice = new EpisodeGuiceRunner(this);
 
     @Inject
     EpisodeUtil episodeUtil;

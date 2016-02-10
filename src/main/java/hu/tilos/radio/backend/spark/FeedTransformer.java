@@ -4,7 +4,7 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.Summary;
 import net.anzix.jaxrs.atom.itunes.*;
-import spark.ResponseTransformer;
+
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -14,10 +14,9 @@ import java.net.URI;
 import java.util.Date;
 import java.util.HashSet;
 
-public class FeedTransformer implements ResponseTransformer {
+public class FeedTransformer {
 
 
-    @Override
     public String render(Object model) throws Exception {
         Marshaller marshaller = createMarshaller();
         Feed feed = (Feed) model;

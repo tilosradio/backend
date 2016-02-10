@@ -3,8 +3,6 @@ package hu.tilos.radio.backend.episode.util;
 import com.github.fakemongo.junit.FongoRule;
 import hu.tilos.radio.backend.GuiceRunner;
 import hu.tilos.radio.backend.episode.EpisodeData;
-import hu.tilos.radio.backend.episode.EpisodeGuiceRunner;
-import hu.tilos.radio.backend.episode.util.PersistentEpisodeProvider;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -19,8 +17,6 @@ public class PersistentEpisodeProviderTest {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @Rule
-    public GuiceRunner guice = new EpisodeGuiceRunner(this);
 
     @Inject
     PersistentEpisodeProvider p;

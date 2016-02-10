@@ -1,19 +1,8 @@
 package hu.tilos.radio.backend.tag;
 
-import hu.radio.tilos.model.type.DescriptiveType;
 
-public enum TagType implements DescriptiveType {
+public enum TagType {
 
-    GENERIC("Cimke"),
-    PERSON("Ember");
+    GENERIC, PERSON;
 
-    private final String description;
-
-    TagType(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

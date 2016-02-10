@@ -1,16 +1,18 @@
 package hu.tilos.radio.backend.util;
 
-import com.google.inject.Inject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
-import hu.tilos.radio.backend.show.ShowSimple;
-import hu.tilos.radio.backend.show.ShowType;
+import hu.tilos.radio.backend.data.types.ShowSimple;
+import hu.tilos.radio.backend.data.types.ShowType;
 import org.bson.types.ObjectId;
+import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Service
 public class ShowCache {
 
     @Inject

@@ -18,6 +18,8 @@ import org.bson.types.ObjectId;
 import org.dozer.DozerBeanMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.text.ParseException;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static hu.tilos.radio.backend.MongoUtil.aliasOrId;
 
+@Service
 public class EpisodeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EpisodeService.class);

@@ -5,6 +5,7 @@ import com.mongodb.*;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.text.TextData;
 import org.dozer.DozerBeanMapper;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 /**
  * Returns with the persisted episode records.
  */
+@Service
 public class PersistentEpisodeProvider {
 
 

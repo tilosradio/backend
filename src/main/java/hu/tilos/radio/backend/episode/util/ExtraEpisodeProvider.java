@@ -7,6 +7,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import org.dozer.DozerBeanMapper;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Query the EXTRA episodes for a specific time.
  */
+@Service
 public class ExtraEpisodeProvider {
 
 

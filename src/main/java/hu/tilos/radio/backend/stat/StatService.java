@@ -7,6 +7,7 @@ import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import org.dozer.DozerBeanMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 
+@Service
 public class StatService {
 
     private static final Logger LOG = LoggerFactory.getLogger(StatService.class);

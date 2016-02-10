@@ -1,12 +1,11 @@
 package hu.tilos.radio.backend.episode.util;
 
 import com.mongodb.*;
-import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.types.SchedulingSimple;
 import hu.tilos.radio.backend.episode.EpisodeData;
-import hu.tilos.radio.backend.show.ShowSimple;
-import org.bson.types.ObjectId;
+import hu.tilos.radio.backend.data.types.ShowSimple;
 import org.dozer.DozerBeanMapper;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -17,6 +16,7 @@ import static hu.tilos.radio.backend.MongoUtil.aliasOrId;
 /**
  * Returns with the persisted episode records.
  */
+@Service
 public class ScheduledEpisodeProvider {
 
     @Inject

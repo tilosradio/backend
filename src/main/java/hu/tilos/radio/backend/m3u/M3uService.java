@@ -44,7 +44,6 @@ public class M3uService {
         episodes = filter(episodes, filterType);
 
 
-
         StringBuilder result = new StringBuilder();
         result.append("#EXTM3U\n");
         String classification = "";

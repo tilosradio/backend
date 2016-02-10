@@ -3,11 +3,10 @@ package hu.tilos.radio.backend.episode;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import hu.tilos.radio.backend.GuiceRunner;
 import hu.tilos.radio.backend.TestUtil;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
-import hu.tilos.radio.backend.show.ShowSimple;
+import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.text.TextData;
 import org.dozer.DozerBeanMapper;
 import org.junit.Assert;
@@ -22,9 +21,6 @@ import static hu.tilos.radio.backend.MongoTestUtil.loadTo;
 
 
 public class EpisodeServiceTest {
-
-    @Rule
-    public GuiceRunner guice = new EpisodeGuiceRunner(this);
 
     @Inject
     EpisodeService controller;

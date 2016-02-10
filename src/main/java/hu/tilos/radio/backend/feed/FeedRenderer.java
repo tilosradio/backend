@@ -1,11 +1,12 @@
 package hu.tilos.radio.backend.feed;
 
-import hu.tilos.radio.backend.Configuration;
+
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.itunes.Author;
 import net.anzix.jaxrs.atom.itunes.Duration;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.inject.Inject;
 import java.net.MalformedURLException;
@@ -30,8 +31,7 @@ public class FeedRenderer {
 
     private static final SimpleDateFormat HHMMSS = DateFormatUtil.create("HHmmss");
 
-    @Inject
-    @Configuration(name = "server.url")
+    @Value("${server.url}")
     private String serverUrl;
 
 
