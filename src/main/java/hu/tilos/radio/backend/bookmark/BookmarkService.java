@@ -1,16 +1,18 @@
 package hu.tilos.radio.backend.bookmark;
 
 import com.mongodb.*;
-import hu.tilos.radio.backend.Session;
+import hu.tilos.radio.backend.auth.Session;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import org.bson.types.ObjectId;
 import org.dozer.DozerBeanMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.Date;
 
+@Service
 public class BookmarkService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BookmarkService.class);
@@ -42,8 +44,8 @@ public class BookmarkService {
         bookmark.put("created", new Date());
 
         BasicDBObject creator = new BasicDBObject();
-        creator.put("ref", new DBRef(db, "user", new ObjectId(session.getId())));
-        creator.put("username", session.getUsername());
+        creator.put("ref", new DBRef(db, "user", new ObjectId(session.getCurrentUser().getId())));
+        creator.put("username", session.getCurrentUser().getUsername());
         bookmark.put("creator", creator);
         if (episode.get("bookmarks") == null) {
             episode.put("bookmarks", new BasicDBList());

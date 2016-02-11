@@ -5,6 +5,7 @@ import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.feed.FeedRenderer;
 import hu.tilos.radio.backend.util.Days;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 /**
  * Generate various m3u feeds.
  */
+@Service
 public class M3uService {
 
     @Inject

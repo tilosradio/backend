@@ -14,6 +14,7 @@ import net.anzix.jaxrs.atom.itunes.Explicit;
 import net.anzix.jaxrs.atom.itunes.Image;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.net.URI;
@@ -26,6 +27,7 @@ import static hu.tilos.radio.backend.MongoUtil.aliasOrId;
 /**
  * Generate atom feed for the shows.
  */
+@Service
 public class FeedService {
 
 

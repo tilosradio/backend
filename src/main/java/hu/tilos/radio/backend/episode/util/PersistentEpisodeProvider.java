@@ -3,7 +3,6 @@ package hu.tilos.radio.backend.episode.util;
 
 import com.mongodb.*;
 import hu.tilos.radio.backend.episode.EpisodeData;
-import hu.tilos.radio.backend.text.TextData;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 

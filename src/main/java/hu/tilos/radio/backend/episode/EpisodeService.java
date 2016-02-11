@@ -9,7 +9,6 @@ import hu.tilos.radio.backend.data.response.OkResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
-import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.stat.StatService;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.tag.TagUtil;
@@ -18,7 +17,6 @@ import org.bson.types.ObjectId;
 import org.dozer.DozerBeanMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -51,6 +49,7 @@ public class EpisodeService {
 
     @Inject
     ShowCache showCache;
+
 
     public EpisodeData get(String id) {
         DBObject episode = db.getCollection("episode").findOne(aliasOrId(id));
@@ -292,7 +291,6 @@ public class EpisodeService {
 
 
         if (entity.getText() != null) {
-            entity.getText().setAlias("");
             entity.getText().setFormat("markdown");
             entity.getText().setType("episode");
         }
@@ -319,7 +317,6 @@ public class EpisodeService {
     public UpdateResponse update(String alias, EpisodeToSave objectToSave) {
 
         if (objectToSave.getText() != null) {
-            objectToSave.getText().setAlias("");
             objectToSave.getText().setFormat("markdown");
             objectToSave.getText().setType("episode");
         }

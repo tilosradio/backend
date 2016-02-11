@@ -2,7 +2,7 @@ package hu.tilos.radio.backend.episode;
 
 
 import hu.tilos.radio.backend.episode.util.Merger;
-import hu.tilos.radio.backend.text.TextData;
+import hu.tilos.radio.backend.data.types.TextData;
 import org.junit.Assert;
 import org.junit.Test;
 

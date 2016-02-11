@@ -1,4 +1,4 @@
-package hu.tilos.radio.backend.text;
+package hu.tilos.radio.backend.data.types;
 
 /**
  * Data transfer object for text data.

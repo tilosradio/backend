@@ -1,11 +1,15 @@
 package hu.tilos.radio.backend;
 
+import hu.tilos.radio.backend.bookmark.BookmarkService;
+import hu.tilos.radio.backend.bookmark.BookmarkToSave;
+import hu.tilos.radio.backend.data.response.CreateResponse;
+import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.EpisodeService;
+import hu.tilos.radio.backend.episode.EpisodeToSave;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,12 +19,14 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
+    @Autowired
+    private BookmarkService bookmarkService;
+
     @RequestMapping("/api/v1/episode")
-    public List<EpisodeData> list(@RequestParam(defaultValue = "") String id, @RequestParam long from, @RequestParam long to) {
-        if (id.equals("")) {
-            id = null;
-        }
-        return episodeService.listEpisodes(id, from, to);
+    public List<EpisodeData> list(@RequestParam(required = false) String id,
+                                  @RequestParam(required = false, defaultValue = "0") Long start,
+                                  @RequestParam(required = false, defaultValue = "0") Long end) {
+        return episodeService.listEpisodes(id, start, end);
     }
 
     @RequestMapping("/api/v1/episode/next")
@@ -44,33 +50,39 @@ public class EpisodeController {
     }
 
     @RequestMapping("/api/v1/episode/{id}")
-    public EpisodeData get(@RequestParam String id) {
+    public EpisodeData get(@PathVariable String id) {
         return episodeService.get(id);
     }
 
 
-//    post("/api/v1/episode/:id/bookmark", spark.authorized(Role.ADMIN, (req, res, session) ->
-//            bookmarkService.create(session, req.params("id"), gson.fromJson(req.body(), BookmarkToSave.class))), jsonResponse);
-//
+    @RequestMapping("/api/v1/episode/{show}/{year}/{month}/{day}")
+    public EpisodeData getByDate(@PathVariable String show, @PathVariable int year, @PathVariable int month, @PathVariable int day) {
+        return episodeService.getByDate(show, year, month, day);
+    }
 
 
-//    get("/api/v1/episode/:show/:year/:month/:day", (req, res) ->
-//            episodeService.getByDate(req.params("show"),
-//            Integer.parseInt(req.params("year")),
-//            Integer.parseInt(req.params("month")),
-//            Integer.parseInt(req.params("day"))),
-//    jsonResponse);
-//    post("/api/v1/episode",
-//         spark.authorized(Role.AUTHOR, (req, res, session) ->
-//            episodeService.create(gson.fromJson(req.body(), EpisodeToSave.class))), jsonResponse);
-//    put("/api/v1/episode/:id",
-//        spark.authorized(Role.AUTHOR, (req, res, session) ->
-//            episodeService.update(req.params("id"), gson.fromJson(req.body(), EpisodeToSave.class))), jsonResponse);
-//
-//    get("/api/v1/show/:alias/episodes", (req, res) ->
-//            episodeService.listEpisodes(req.params("alias"),
-//            Long.valueOf(req.queryParams("start")),
-//            Long.valueOf(req.queryParams("end"))
-//            ), jsonResponse);
+    @RequestMapping("/api/v1/show/{show}/episodes")
+    public List<EpisodeData> getByDate(@PathVariable String show, @RequestParam long start, @RequestParam long end) {
+        return episodeService.listEpisodes(show, start, end);
+    }
+
+    @PreAuthorize("hasRole('ROLE_AUTHOR')")
+    @RequestMapping(value = "/api/v1/episode/{id}", method = RequestMethod.PUT)
+    public UpdateResponse update(@PathVariable String id, @RequestBody EpisodeToSave episode) {
+        return episodeService.update(id, episode);
+    }
+
+    @PreAuthorize("hasRole('ROLE_AUTHOR')")
+    @RequestMapping(value = "/api/v1/episode", method = RequestMethod.POST)
+    public CreateResponse create(@RequestBody EpisodeToSave episode) {
+        return episodeService.create(episode);
+    }
+
+    @PreAuthorize("hasRole('ROLE_AUTHOR')")
+    @RequestMapping(value = "/api/v1/episode/{id}/bookmark", method = RequestMethod.POST)
+    public CreateResponse createBookmark(@PathVariable String id, @RequestBody BookmarkToSave bookmark) {
+        return bookmarkService.create(null, id, bookmark);
+    }
+
 
 }

@@ -7,6 +7,7 @@ import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.itunes.Author;
 import net.anzix.jaxrs.atom.itunes.Duration;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.net.MalformedURLException;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * Utility to create Feed object from Episode list.
  */
+@Service
 public class FeedRenderer {
 
     private static final SimpleDateFormat YYYY_DOT_MM_DOT_DD = DateFormatUtil.create("yyyy'.'MM'.'dd");

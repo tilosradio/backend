@@ -1,7 +1,5 @@
 package hu.tilos.radio.backend.data.types;
 
-import hu.tilos.radio.backend.contribution.Contribution;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -6,7 +6,7 @@ import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.tag.TagData;
-import hu.tilos.radio.backend.text.TextData;
+import hu.tilos.radio.backend.data.types.TextData;
 
 import java.util.Date;
 import java.util.HashSet;

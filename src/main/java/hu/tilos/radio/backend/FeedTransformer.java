@@ -1,4 +1,4 @@
-package hu.tilos.radio.backend.spark;
+package hu.tilos.radio.backend;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import net.anzix.jaxrs.atom.*;

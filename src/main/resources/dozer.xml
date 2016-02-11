@@ -13,16 +13,13 @@
                 <class-a>java.lang.Integer</class-a>
                 <class-b>hu.tilos.radio.backend.data.types.ShowType</class-b>
             </converter>
-            <converter type="hu.tilos.radio.backend.converters.EnumDecoder">
-                <class-a>java.lang.Integer</class-a>
-                <class-b>hu.tilos.radio.backend.data.types.ShowStatus</class-b>
-            </converter>
+
         </custom-converters>
     </configuration>
 
     <mapping map-null="false">
         <class-a map-get-method="get" map-set-method="put">org.bson.BSONObject</class-a>
-        <class-b>hu.tilos.radio.backend.contribution.Contribution</class-b>
+        <class-b>hu.tilos.radio.backend.data.types.Contribution</class-b>
         <field>
             <a key="show">this</a>
             <b>show</b>
@@ -42,7 +39,7 @@
 
     <mapping map-null="false">
         <class-a map-get-method="get" map-set-method="put">org.bson.BSONObject</class-a>
-        <class-b>hu.tilos.radio.backend.contribution.ShowReference</class-b>
+        <class-b>hu.tilos.radio.backend.data.types.ShowReference</class-b>
         <field custom-converter="hu.tilos.radio.backend.converters.ReferenceDecoder">
             <a key="ref">this</a>
             <b>id</b>
@@ -64,10 +61,6 @@
             <a key="type">this</a>
             <b>type</b>
         </field>
-        <field custom-converter="hu.tilos.radio.backend.converters.EnumDecoder">
-            <a key="status">this</a>
-            <b>status</b>
-        </field>
         <field custom-converter="hu.tilos.radio.backend.converters.ReferenceDecoder">
             <a key="ref">this</a>
             <b>id</b>
@@ -76,12 +69,8 @@
 
     <mapping map-null="false" type="one-way">
         <class-a map-get-method="get" map-set-method="put">org.bson.BSONObject</class-a>
-        <class-b>hu.tilos.radio.backend.text.TextData</class-b>
+        <class-b>hu.tilos.radio.backend.data.types.TextData</class-b>
 
-        <field>
-            <a key="_id">this</a>
-            <b>id</b>
-        </field>
         <field>
             <a key="content">this</a>
             <b>content</b>
@@ -90,13 +79,9 @@
 
     <mapping map-null="false" type="one-way">
         <class-a map-get-method="get" map-set-method="put">org.bson.BSONObject</class-a>
-        <class-b>hu.tilos.radio.backend.text.TextDataSimple</class-b>
-        <field>
-            <a key="_id">this</a>
-            <b>id</b>
-        </field>
-    </mapping>
+        <class-b>hu.tilos.radio.backend.data.types.TextDataSimple</class-b>
 
+    </mapping>
 
 
     <mapping map-null="false" type="one-way">
@@ -116,7 +101,6 @@
             <b key="type">this</b>
         </field>
     </mapping>
-
 
 
     <mapping map-null="false">
@@ -151,7 +135,7 @@
     </mapping>
 
     <mapping map-null="false" type="one-way">
-        <class-a>hu.tilos.radio.backend.text.TextData</class-a>
+        <class-a>hu.tilos.radio.backend.data.types.TextData</class-a>
         <class-b map-get-method="get" map-set-method="put">com.mongodb.BasicDBObject</class-b>
     </mapping>
     <mapping map-null="false" type="one-way">

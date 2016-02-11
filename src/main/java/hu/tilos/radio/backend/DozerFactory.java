@@ -2,22 +2,21 @@ package hu.tilos.radio.backend;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import hu.tilos.radio.backend.converters.*;
+import hu.tilos.radio.backend.converters.MongoListEncoder;
+import hu.tilos.radio.backend.converters.MongoObjectEncoder;
+import hu.tilos.radio.backend.converters.ReferenceEncoder;
 import org.dozer.CustomConverter;
 import org.dozer.DozerBeanMapper;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
-
-@Component
+@Configuration
 public class DozerFactory {
 
     private static org.slf4j.Logger LOG = LoggerFactory.getLogger(DozerFactory.class);
@@ -35,15 +34,26 @@ public class DozerFactory {
         return mapper;
     }
 
-    @PostConstruct
     public void init() {
 
         List<String> mappingFiles = detectMappings();
         mappingFiles.add("dozer.xml");
         mapper = new DozerBeanMapper(mappingFiles);
-
+        Map<String, CustomConverter> converters = createCustomConverters();
+        mapper.setCustomConvertersWithId(converters);
     }
 
+    public Map<String, CustomConverter> createCustomConverters() {
+        Map<String, CustomConverter> converters = new HashMap<>();
+//        converters.put("uploadUrl", new PrefixingConverter("https://tilos.hu/upload/"));
+        converters.put("showReference", new ReferenceEncoder(db, "show", new String[]{"alias", "name"}));
+//        converters.put("authorReference", new ReferenceEncoder(db, "author", new String[]{"alias", "name"}));
+        converters.put("childEncoder", new MongoObjectEncoder(mapper));
+        converters.put("childListEncoder", new MongoListEncoder(mapper));
+//        converters.put("resolvedReferenceDecoder", new ResolvedReferenceDecoder(db, mapper));
+//        converters.put("soundLink", new PrefixingConverter("http://archive.tilos.hu/sounds/", "http"));
+        return converters;
+    }
 
     protected List<String> detectMappings() {
         List<String> result = new ArrayList<>();
