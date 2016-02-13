@@ -64,18 +64,6 @@ public class FairEnoughHtmlSanitizer {
 
     }
 
-    public static void main(String[] args) throws IOException {
-        if (args.length != 0) {
-            System.err.println("Reads from STDIN and writes to STDOUT");
-            System.exit(-1);
-        }
-        System.err.println("[Reading from STDIN]");
-        // Fetch the HTML to sanitize.
-        String html = CharStreams.toString(
-                new InputStreamReader(System.in, Charsets.UTF_8));
-        // Set up an output channel to receive the sanitized HTML.
-
-    }
 
     public String clean(String html) {
         try {
