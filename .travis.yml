@@ -8,7 +8,7 @@ jdk:
   
 after_success:
 - mkdir -p target/upload
-- cp target/*capsule-fat*.jar target/upload
+- cp target/service-episode-*-SNAPSHOT.jar target/upload/service-episode.jar
 - codecov
 deploy:
   provider: s3
