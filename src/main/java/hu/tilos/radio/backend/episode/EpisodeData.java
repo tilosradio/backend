@@ -132,6 +132,10 @@ public class EpisodeData extends EpisodeBase {
                 '}';
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public Set<BookmarkData> getBookmarks() {
         return bookmarks;
     }
