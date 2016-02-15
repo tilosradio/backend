@@ -26,7 +26,12 @@ public class EpisodeController {
     public List<EpisodeData> list(@RequestParam(required = false) String id,
                                   @RequestParam(required = false, defaultValue = "0") Long start,
                                   @RequestParam(required = false, defaultValue = "0") Long end) {
-        return episodeService.listEpisodes(id, start, end);
+        if (id == null) {
+            return episodeService.listEpisodes(start, end);
+        } else {
+            return episodeService.listEpisodes(id, start, end);
+        }
+
     }
 
     @RequestMapping("/api/v1/episode/next")
