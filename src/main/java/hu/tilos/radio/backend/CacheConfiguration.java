@@ -13,7 +13,7 @@ public class CacheConfiguration {
 
     @Bean
     public CacheManager cacheManager() {
-        GuavaCacheManager guavaCacheManager = new GuavaCacheManager("episodes");
+        GuavaCacheManager guavaCacheManager = new GuavaCacheManager("episodes","episodes-next","episodes-last","episodes-lastweek");
 
         guavaCacheManager.setCacheBuilder(CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).recordStats());
         return guavaCacheManager;
