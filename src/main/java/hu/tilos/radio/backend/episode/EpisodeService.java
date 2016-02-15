@@ -200,6 +200,7 @@ public class EpisodeService {
         return episode.getBookmarks().size() == 0 && episode.getText() == null && !episode.isExtra() && episode.getPlannedFrom().equals(episode.getRealFrom());
     }
 
+    @Cacheable("episodes-next")
     public List<EpisodeData> next() {
         Date start = new Date();
         Date end = new Date();
@@ -221,6 +222,7 @@ public class EpisodeService {
     }
 
 
+    @Cacheable("episodes-lastweek")
     public List<EpisodeData> lastWeek() {
         Date now = new Date();
         Date weekAgo = new Date();
@@ -240,6 +242,7 @@ public class EpisodeService {
         return result;
     }
 
+    @Cacheable("episodes-last")
     public List<EpisodeData> last() {
         Date start = new Date();
         start.setTime(start.getTime() - (long) 30 * 24 * 60 * 60 * 1000);
