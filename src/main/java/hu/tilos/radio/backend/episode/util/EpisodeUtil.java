@@ -5,10 +5,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBRef;
 import hu.tilos.radio.backend.bookmark.BookmarkData;
+import hu.tilos.radio.backend.data.types.TextData;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.stat.StatService;
-import hu.tilos.radio.backend.data.types.TextData;
 import hu.tilos.radio.backend.util.ShowCache;
 import hu.tilos.radio.backend.util.TextConverter;
 import org.slf4j.Logger;
@@ -63,7 +63,12 @@ public class EpisodeUtil {
                 if (r.getText().getFormat() == null) {
                     r.getText().setFormat("legacy");
                 }
-                r.getText().setFormatted(converter.format(r.getText().getFormat(), r.getText().getContent()));
+                try {
+                    r.getText().setFormatted(converter.format(r.getText().getFormat(), r.getText().getContent()));
+                } catch (Exception ex) {
+                    r.getText().setFormat("Can't render episode " + ex.getMessage());
+                    LOG.error("Can't render episode " + r.getId() + " " + r.getPlannedFrom(), ex);
+                }
                 return r;
             }
         } catch (Exception ex) {
