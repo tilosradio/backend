@@ -61,10 +61,10 @@ public class TagUtil {
     }
 
     public String htmlize(String source) {
-        source = source.replaceAll(GENERIC_SIMPLE, "<a href=\"/tag/$1\"><span class=\"label label-primary\">$1</span></a>");
-        source = source.replaceAll(GENERIC_COMPLEX, "<a href=\"/tag/$1\"><span class=\"label label-primary\">$1</span></a>");
-        source = source.replaceAll(PERSON_SIMPLE, "<a href=\"/tag/$1\"><span class=\"label label-success\">$1</span></a>");
-        source = source.replaceAll(PERSON_COMPLEX, "<a href=\"/tag/$1\"><span class=\"label label-success\">$1</span></a>");
+        source = source.replaceAll(GENERIC_SIMPLE, "$1");
+        source = source.replaceAll(GENERIC_COMPLEX, "$1");
+        source = source.replaceAll(PERSON_SIMPLE, "$1");
+        source = source.replaceAll(PERSON_COMPLEX, "$1");
         source = source.replace("@@", "@");
         source = source.replace("##", "#");
         return source;
