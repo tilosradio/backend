@@ -145,7 +145,7 @@ public class ModelTest {
     }
 
     private static final String RFC_COMPLEX_XML =
-            "   <showFeed xmlns=\"http://www.w3.org/2005/Atom\">\n" +
+            "   <feed xmlns=\"http://www.w3.org/2005/Atom\">\n" +
                     "     <title type=\"text\">dive into mark</title>\n" +
                     "     <subtitle type=\"html\">\n" +
                     "       A &lt;em&gt;lot&lt;/em&gt; of effort\n" +
@@ -188,7 +188,7 @@ public class ModelTest {
                     "         </div>\n" +
                     "       </content>\n" +
                     "     </entry>\n" +
-                    "   </showFeed>";
+                    "   </feed>";
 
     @Test
     public void testRFC() throws Exception {
