@@ -36,18 +36,18 @@ public class FeedController {
 
     @RequestMapping(value = "/feed/show/{show}", produces = "application/atom+xml")
     public Feed showFeed(@PathVariable String show) {
-        return feedService.feed(show, null);
+        return feedService.showFeed(show, null, "normal");
     }
 
     @RequestMapping(value = "/feed/show/itunes/{show}", produces = "application/atom+xml")
     public Feed showFeedItunes(@PathVariable String show) {
-        return feedService.feed(show, null);
+        return feedService.showFeed(show, null, "itunes");
     }
 
 
     @RequestMapping(value = "/feed/show/{show}/{year}", produces = "application/atom+xml")
     public Feed showFeedYearly(@PathVariable String show, @PathVariable String year) {
-        return feedService.feed(show, year);
+        return feedService.showFeed(show, year, "show-feed");
     }
 
 }

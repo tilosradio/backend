@@ -1,11 +1,10 @@
 package hu.tilos.radio.backend.feed;
 
 import com.mongodb.DB;
-
-import hu.tilos.radio.backend.episode.EpisodeData;
-import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.data.types.ShowType;
+import hu.tilos.radio.backend.episode.EpisodeData;
+import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import net.anzix.jaxrs.atom.Feed;
 import net.anzix.jaxrs.atom.Link;
 import net.anzix.jaxrs.atom.MediaType;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 import static hu.tilos.radio.backend.MongoUtil.aliasOrId;
 
 /**
- * Generate atom feed for the shows.
+ * Generate atom showFeed for the shows.
  */
 @Service
 public class FeedService {
@@ -52,6 +51,32 @@ public class FeedService {
         return weeklyFeed(null);
     }
 
+    public Feed weeklyFeed(String type) {
+        Date now = new Date();
+        Date weekAgo = new Date();
+        weekAgo.setTime(now.getTime() - (long) 604800000L);
+
+        List<EpisodeData> episodes = filter(episodeUtil.getEpisodeData(null, weekAgo, now), type);
+
+        Collections.sort(episodes, (episodeData, episodeData2) -> episodeData2.getPlannedFrom().compareTo(episodeData.getPlannedFrom()));
+
+        Feed feed = feedRenderer.generateFeed(episodes,
+                "urn:radio-tilos-hu:weekly" + (type == null ? "" : "." + type),
+                "weekly" + (type == null ? "" : "-" + type),
+                true);
+
+
+        feed.setTitle("Tilos Rádió heti podcast");
+        feed.setUpdated(new Date());
+
+        Link feedLink = new Link();
+        feedLink.setRel("self");
+        feedLink.setType(new MediaType("application", "atom+xml"));
+        feedLink.setHref(uri(serverUrl + "/showFeed/weekly"));
+
+        return feed;
+    }
+
 
     public Feed tilosFeed(String type) {
         Date now = new Date();
@@ -72,7 +97,11 @@ public class FeedService {
                 .collect(Collectors.toList());
 
 
-        Feed feed = feedRenderer.generateFeed(episodes, "urn:radio-tilos-hu:podcast" + (type == null ? "" : "." + type), true);
+        Feed feed = feedRenderer.generateFeed(
+                episodes,
+                "urn:radio-tilos-hu:podcast" + (type == null ? "" : "." + type)
+                , "podcast" + (type == null ? "" : ("-" + type))
+                , true);
 
         if (type == null) {
             feed.setTitle("Tilos Rádió podcast");
@@ -93,38 +122,11 @@ public class FeedService {
         Link feedLink = new Link();
         feedLink.setRel("self");
         feedLink.setType(new MediaType("application", "atom+xml"));
-        feedLink.setHref(uri(serverUrl + "/feed/tilos" + type == null ? "" : "/type"));
+        feedLink.setHref(uri(serverUrl + "/showFeed/tilos" + type == null ? "" : "/type"));
 
         return feed;
     }
 
-    public Feed weeklyFeed(String type) {
-        Date now = new Date();
-        Date weekAgo = new Date();
-        weekAgo.setTime(now.getTime() - (long) 604800000L);
-
-        List<EpisodeData> episodes = filter(episodeUtil.getEpisodeData(null, weekAgo, now), type);
-
-        Collections.sort(episodes, new Comparator<EpisodeData>() {
-            @Override
-            public int compare(EpisodeData episodeData, EpisodeData episodeData2) {
-                return episodeData2.getPlannedFrom().compareTo(episodeData.getPlannedFrom());
-            }
-        });
-
-        Feed feed = feedRenderer.generateFeed(episodes, "urn:radio-tilos-hu:weekly" + (type == null ? "" : "." + type), true);
-
-
-        feed.setTitle("Tilos Rádió heti podcast");
-        feed.setUpdated(new Date());
-
-        Link feedLink = new Link();
-        feedLink.setRel("self");
-        feedLink.setType(new MediaType("application", "atom+xml"));
-        feedLink.setHref(uri(serverUrl + "/feed/weekly"));
-
-        return feed;
-    }
 
     private List<EpisodeData> filter(List<EpisodeData> episodeData, String type) {
         if (type == null) {
@@ -150,11 +152,11 @@ public class FeedService {
 
 
     public Feed itunesFeed(String alias) {
-        return feed(alias, null);
+        return showFeed(alias, null, "show-feed");
     }
 
 
-    public Feed feed(String alias, String year) {
+    public Feed showFeed(String alias, String year, String selector) {
         //{year: (/.*)?
         //,
         if (year == null) {
@@ -187,7 +189,7 @@ public class FeedService {
         });
 
 
-        Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias);
+        Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, false);
 
         //generate header
 
@@ -199,7 +201,7 @@ public class FeedService {
         Link feedLink = new Link();
         feedLink.setRel("self");
         feedLink.setType(new MediaType("application", "atom+xml"));
-        feedLink.setHref(uri(serverUrl + "/feed/show/" + show.getAlias() + yearPostfix));
+        feedLink.setHref(uri(serverUrl + "/showFeed/show/" + show.getAlias() + yearPostfix));
 
         feed.getLinks().add(feedLink);
         feed.setId(uri("http://tilos.hu/show/" + show.getAlias() + yearPostfix));

@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests().antMatchers(HttpMethod.GET, "/api/**").permitAll()
                 .and()
-                .authorizeRequests().antMatchers(HttpMethod.GET, "/feed/**").permitAll();
+                .authorizeRequests().antMatchers(HttpMethod.GET, "/showFeed/**").permitAll();
         http.addFilterAfter(new JwtFilter(authenticationManagerBean()), AnonymousAuthenticationFilter.class);
 
     }

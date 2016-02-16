@@ -145,7 +145,7 @@ public class ModelTest {
     }
 
     private static final String RFC_COMPLEX_XML =
-            "   <feed xmlns=\"http://www.w3.org/2005/Atom\">\n" +
+            "   <showFeed xmlns=\"http://www.w3.org/2005/Atom\">\n" +
                     "     <title type=\"text\">dive into mark</title>\n" +
                     "     <subtitle type=\"html\">\n" +
                     "       A &lt;em&gt;lot&lt;/em&gt; of effort\n" +
@@ -156,7 +156,7 @@ public class ModelTest {
                     "     <link rel=\"alternate\" type=\"text/html\"\n" +
                     "      hreflang=\"en\" href=\"http://example.org/\"/>\n" +
                     "     <link rel=\"self\" type=\"application/atom+xml\"\n" +
-                    "      href=\"http://example.org/feed.atom\"/>\n" +
+                    "      href=\"http://example.org/showFeed.atom\"/>\n" +
                     "     <rights>Copyright (c) 2003, Mark Pilgrim</rights>\n" +
                     "     <generator uri=\"http://www.example.com/\" version=\"1.0\">\n" +
                     "       Example Toolkit\n" +
@@ -188,7 +188,7 @@ public class ModelTest {
                     "         </div>\n" +
                     "       </content>\n" +
                     "     </entry>\n" +
-                    "   </feed>";
+                    "   </showFeed>";
 
     @Test
     public void testRFC() throws Exception {

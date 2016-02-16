@@ -9,7 +9,6 @@ import net.anzix.jaxrs.atom.itunes.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -37,11 +36,11 @@ public class FeedRenderer {
     private String serverUrl;
 
 
-    public static String createDownloadURI(EpisodeData episode) {
+    public static String createDownloadURI(EpisodeData episode, String selector) {
         return "http://tilos.hu/mp3/tilos-" +
                 YYYYMMDD.format(episode.getRealFrom()) + "-" +
                 HHMMSS.format(episode.getRealFrom()) + "-" +
-                HHMMSS.format(episode.getRealTo()) + ".mp3";
+                HHMMSS.format(episode.getRealTo()) + ".mp3" + (selector == null ? "" : "?s=" + selector);
     }
 
     private static Date dateFromEpoch(long realTo) {
@@ -51,10 +50,10 @@ public class FeedRenderer {
     }
 
     public Feed generateFeed(List<EpisodeData> episodeData, String id) {
-        return generateFeed(episodeData, id, false);
+        return generateFeed(episodeData, id, null, false);
     }
 
-    public Feed generateFeed(List<EpisodeData> episodeData, String id, boolean prefixedWithShowName) {
+    public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, boolean prefixedWithShowName) {
         Feed feed = new Feed();
         feed.getAnyOther().add(new Author("Tilos Radio"));
         try {
@@ -105,7 +104,7 @@ public class FeedRenderer {
                     Link sound = new Link();
                     sound.setType(new MediaType("audio", "mpeg"));
                     sound.setRel("enclosure");
-                    sound.setHref(new URI(createDownloadURI(episode)));
+                    sound.setHref(new URI(createDownloadURI(episode, selector)));
                     e.getLinks().add(sound);
 
 

@@ -70,7 +70,7 @@ public class M3uService {
                 title += " adás archívum";
             }
             result.append("#EXTINF:-1, " + artist + " - " + title + "\n");
-            result.append(FeedRenderer.createDownloadURI(episode) + "\n");
+            result.append(FeedRenderer.createDownloadURI(episode,"m3u") + "\n");
         }
         return result.toString();
     }

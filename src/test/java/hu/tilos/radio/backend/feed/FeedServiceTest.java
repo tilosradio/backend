@@ -52,7 +52,7 @@ public class FeedServiceTest {
 
 
         //when
-        Feed feed = (Feed) feedController.feed("3utas", null);
+        Feed feed = (Feed) feedController.showFeed("3utas", null, "show-feed");
 
         //then
         JAXBContext jaxbc = JAXBContext.newInstance(Feed.class);
