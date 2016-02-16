@@ -5,6 +5,7 @@ import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.feed.FeedRenderer;
 import hu.tilos.radio.backend.util.Days;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -24,6 +25,7 @@ public class M3uService {
     private EpisodeUtil episodeUtil;
 
 
+    @Cacheable("m3u")
     public String lastWeek(String streamName, String filterType) {
         if (streamName == null) {
             streamName = "/tilos";

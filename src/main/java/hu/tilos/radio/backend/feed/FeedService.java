@@ -13,6 +13,7 @@ import net.anzix.jaxrs.atom.itunes.Explicit;
 import net.anzix.jaxrs.atom.itunes.Image;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -46,11 +47,12 @@ public class FeedService {
     @Inject
     private DozerBeanMapper mapper;
 
-
+    @Cacheable("feed-weekly")
     public Feed weeklyFeed() {
         return weeklyFeed(null);
     }
 
+    @Cacheable("feed-weekly-type")
     public Feed weeklyFeed(String type) {
         Date now = new Date();
         Date weekAgo = new Date();
@@ -78,6 +80,12 @@ public class FeedService {
     }
 
 
+    @Cacheable("feed-tilos")
+    public Feed tilosFeed() {
+        return tilosFeed(null);
+    }
+
+    @Cacheable("feed-tilos-type")
     public Feed tilosFeed(String type) {
         Date now = new Date();
         Date weekAgo = new Date();
@@ -155,6 +163,11 @@ public class FeedService {
         return showFeed(alias, null, "show-feed");
     }
 
+
+    @Cacheable("feed-show")
+    public Feed showFeed(String alias, String selector) {
+        return showFeed(alias, null, selector);
+    }
 
     public Feed showFeed(String alias, String year, String selector) {
         //{year: (/.*)?

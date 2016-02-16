@@ -36,12 +36,12 @@ public class FeedController {
 
     @RequestMapping(value = "/feed/show/{show}", produces = "application/atom+xml")
     public Feed showFeed(@PathVariable String show) {
-        return feedService.showFeed(show, null, "normal");
+        return feedService.showFeed(show, "normal");
     }
 
     @RequestMapping(value = "/feed/show/itunes/{show}", produces = "application/atom+xml")
     public Feed showFeedItunes(@PathVariable String show) {
-        return feedService.showFeed(show, null, "itunes");
+        return feedService.showFeed(show, "itunes");
     }
 
 
