@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -252,6 +254,11 @@ public class EpisodeUtil {
                 HHMMSS.format(from) +
                 "-" +
                 HHMMSS.format(to) + ".m3u";
+
+    }
+
+    public List<EpisodeData> getEpisodeData(String showIdOrAlias, LocalDateTime start, LocalDateTime end) {
+        return getEpisodeData(showIdOrAlias, Date.from(start.atZone(ZoneId.systemDefault()).toInstant()), Date.from(end.atZone(ZoneId.systemDefault()).toInstant()));
 
     }
 }

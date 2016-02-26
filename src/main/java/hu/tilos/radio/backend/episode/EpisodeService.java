@@ -7,6 +7,7 @@ import com.mongodb.DBObject;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.OkResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
+import hu.tilos.radio.backend.data.types.ShowType;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.stat.StatService;
@@ -22,7 +23,11 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -50,6 +55,10 @@ public class EpisodeService {
 
     @Inject
     ShowCache showCache;
+
+    private static final SimpleDateFormat YYYYMDD = new SimpleDateFormat("yyyy-MM-dd");
+
+    private static final SimpleDateFormat HHMMSS = new SimpleDateFormat("HH:mm:ss");
 
 
     public EpisodeData get(String id) {
@@ -222,6 +231,41 @@ public class EpisodeService {
     }
 
 
+    public String previousWeekAsCsv() {
+
+        LocalDateTime start = LocalDateTime.now().with(TemporalAdjusters.previous(DayOfWeek.FRIDAY.MONDAY)).minusDays(7);
+        LocalDateTime end = start.plusDays(7);
+
+        List<EpisodeData> episodes = episodeUtil.getEpisodeData(null, start, end);
+
+        Collections.sort(episodes, (episodeData, episodeData2) -> episodeData2.getPlannedFrom().compareTo(episodeData.getPlannedFrom()));
+
+        StringBuilder b = new StringBuilder();
+        episodes.forEach(episodeData -> {
+            Date to = episodeData.getRealTo();
+            if (episodeData.getRealTo().getTime() - episodeData.getPlannedTo().getTime() == 1000 * 60 * 30) {
+                to = episodeData.getPlannedTo();
+            }
+            b.append(YYYYMDD.format(episodeData.getPlannedFrom()));
+            b.append(";");
+            b.append(HHMMSS.format(episodeData.getRealFrom()));
+            b.append(";");
+            b.append(HHMMSS.format(to));
+            b.append(";");
+            b.append(episodeData.getShow().getName());
+            b.append(";");
+            if (episodeData.getText() != null) {
+                b.append(episodeData.getText().getTitle().replace(';', '-'));
+            }
+            b.append(";");
+            b.append(episodeData.getShow().getType() == ShowType.SPEECH ? "Szöveges" : "Zenés");
+            b.append("\n");
+        });
+        return b.toString();
+
+
+    }
+
     @Cacheable("episodes-lastweek")
     public List<EpisodeData> lastWeek() {
         Date now = new Date();
@@ -230,12 +274,7 @@ public class EpisodeService {
 
         List<EpisodeData> episodes = episodeUtil.getEpisodeData(null, weekAgo, now);
 
-        Collections.sort(episodes, new Comparator<EpisodeData>() {
-            @Override
-            public int compare(EpisodeData episodeData, EpisodeData episodeData2) {
-                return episodeData2.getPlannedFrom().compareTo(episodeData.getPlannedFrom());
-            }
-        });
+        Collections.sort(episodes, (episodeData, episodeData2) -> episodeData2.getPlannedFrom().compareTo(episodeData.getPlannedFrom()));
 
         List<EpisodeData> result = episodes.stream().filter(episode -> episode.getText() != null && episode.getText().getTitle() != null && episode.getText().getTitle().length() > 1)
                 .collect(Collectors.toList());

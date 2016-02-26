@@ -53,6 +53,12 @@ public class EpisodeController {
         return episodeService.lastWeek();
     }
 
+    @RequestMapping("/api/v1/episode/report")
+    @ResponseBody
+    public String csvReport() {
+        return episodeService.previousWeekAsCsv();
+    }
+
     @RequestMapping("/api/v1/episode/now")
     public EpisodeData now() {
         return episodeService.now();
