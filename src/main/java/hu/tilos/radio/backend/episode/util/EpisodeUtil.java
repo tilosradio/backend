@@ -103,7 +103,6 @@ public class EpisodeUtil {
         if (persist) {
             persistEpisodeFromThePast(merged);
         }
-        fillTheBookmarks(from, to, merged);
         merged = episodeTextFromBookmark(merged);
         for (EpisodeData episode : merged) {
             enrichEpisode(episode);
@@ -112,23 +111,6 @@ public class EpisodeUtil {
     }
 
 
-    private void fillTheBookmarks(Date from, Date to, List<EpisodeData> merged) {
-        BasicDBObject query = new BasicDBObject();
-        query.put("from", new BasicDBObject("$lt", to));
-        query.put("to", new BasicDBObject("$gt", from));
-        List<BookmarkData> bookmarks = db.getCollection("bookmark").find(query).toArray().stream().map(dbOject -> {
-            BookmarkData d = new BookmarkData();
-            d.setFrom((Date) dbOject.get("from"));
-            d.setTo((Date) dbOject.get("to"));
-            d.setTitle((String) dbOject.get("title"));
-            d.getCreator().setUsername((String) ((BasicDBObject) dbOject.get("creator")).get("username"));
-            d.setM3uUrl(linkGenerator(d.getFrom(), d.getTo()));
-            return d;
-        }).collect(Collectors.toList());
-
-        bookmarks.stream().forEach(bookmark -> addBookmarkTo(bookmark, merged));
-
-    }
 
     private void addBookmarkTo(BookmarkData bookmark, List<EpisodeData> merged) {
         Optional<EpisodeData> episode = merged.stream().max((e1, e2) -> getIntersection(e1, bookmark).compareTo(getIntersection(e2, bookmark)));
