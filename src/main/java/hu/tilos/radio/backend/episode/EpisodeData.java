@@ -4,13 +4,12 @@ package hu.tilos.radio.backend.episode;
 import hu.tilos.radio.backend.bookmark.BookmarkData;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.data.types.ShowSimple;
+import hu.tilos.radio.backend.event.Event;
 import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.data.types.TextData;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Json transfer object for episodes;
@@ -39,6 +38,7 @@ public class EpisodeData extends EpisodeBase {
 
     private Set<BookmarkData> bookmarks = new HashSet<>();
 
+    private List<Event> events = new ArrayList<>();
     /**
      * false if generated from scheduling true if comes from real record.
      */
@@ -87,6 +87,14 @@ public class EpisodeData extends EpisodeBase {
     public void setShow(ShowSimple show) {
         this.show = show;
         url = calculateUrl();
+    }
+
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
     }
 
     public boolean isPersistent() {

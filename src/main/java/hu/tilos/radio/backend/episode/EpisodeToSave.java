@@ -15,6 +15,8 @@ public class EpisodeToSave extends EpisodeBase {
 
     private TextData text;
 
+    private boolean extra;
+
     public List<TagData> getTags() {
         return tags;
     }
@@ -37,5 +39,13 @@ public class EpisodeToSave extends EpisodeBase {
 
     public void setText(TextData text) {
         this.text = text;
+    }
+
+    public boolean isExtra() {
+        return extra;
+    }
+
+    public void setExtra(boolean extra) {
+        this.extra = extra;
     }
 }

@@ -10,6 +10,7 @@ import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.data.types.ShowType;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
+import hu.tilos.radio.backend.event.EventService;
 import hu.tilos.radio.backend.stat.StatService;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.tag.TagUtil;
@@ -50,11 +51,17 @@ public class EpisodeService {
     @Inject
     StatService statService;
 
+//    @Inject
+    EventService eventService;
+
     @Inject
     DB db;
 
     @Inject
     ShowCache showCache;
+
+    @Inject
+    EpisodeRepository episodeRepository;
 
     private static final SimpleDateFormat YYYYMDD = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -65,6 +72,7 @@ public class EpisodeService {
         DBObject episode = db.getCollection("episode").findOne(aliasOrId(id));
         EpisodeData r = modelMapper.map(episode, EpisodeData.class);
         episodeUtil.enrichEpisode(r);
+        //r.setEvents(eventService.findEvents(id));
         return r;
     }
 
@@ -347,6 +355,16 @@ public class EpisodeService {
         return new CreateResponse(((ObjectId) newMongoOBject.get("_id")).toHexString());
     }
 
+
+    public void delete(String internalId) {
+        EpisodeData episode = episodeRepository.findOne(internalId);
+        if (episode.getText()==null || episode.getText().getTitle() == null) {
+            episodeRepository.delete(internalId);
+        } else {
+            throw new RuntimeException("Episode has text. Can't be deleted");
+        }
+
+    }
 
     public UpdateResponse update(String alias, EpisodeToSave objectToSave) {
 
