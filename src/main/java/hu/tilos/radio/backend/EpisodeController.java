@@ -23,6 +23,7 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
+
     @Autowired
     private BookmarkService bookmarkService;
 
@@ -85,6 +86,12 @@ public class EpisodeController {
     @RequestMapping(value = "/api/v1/episode/{id}", method = RequestMethod.PUT)
     public UpdateResponse update(@PathVariable String id, @RequestBody EpisodeToSave episode) {
         return episodeService.update(id, episode);
+    }
+
+    @PreAuthorize("hasRole('ROLE_AUTHOR')")
+    @RequestMapping(value = "/api/v1/episode/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable String id) {
+        episodeService.delete(id);
     }
 
     @PreAuthorize("hasRole('ROLE_AUTHOR')")

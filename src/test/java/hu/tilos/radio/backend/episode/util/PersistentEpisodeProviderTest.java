@@ -2,11 +2,11 @@ package hu.tilos.radio.backend.episode.util;
 
 import com.github.fakemongo.junit.FongoRule;
 import hu.tilos.radio.backend.DozerFactory;
+import hu.tilos.radio.backend.EpisodeRepositoryMockFactory;
 import hu.tilos.radio.backend.FongoCreator;
 import hu.tilos.radio.backend.converters.FairEnoughHtmlSanitizer;
 import hu.tilos.radio.backend.converters.HTMLSanitizer;
 import hu.tilos.radio.backend.episode.EpisodeData;
-import hu.tilos.radio.backend.episode.EpisodeRepository;
 import hu.tilos.radio.backend.episode.EpisodeService;
 import hu.tilos.radio.backend.stat.StatService;
 import hu.tilos.radio.backend.tag.TagUtil;
@@ -29,7 +29,7 @@ import static hu.tilos.radio.backend.MongoTestUtil.loadTo;
 @SpringApplicationConfiguration(classes = {EpisodeService.class, EpisodeUtil.class, TagUtil.class,
         StatService.class, PersistentEpisodeProvider.class, ScheduledEpisodeProvider.class, ExtraEpisodeProvider.class,
         Merger.class, ShowCache.class, TextConverter.class, HTMLSanitizer.class, FairEnoughHtmlSanitizer.class,
-        EpisodeRepository.class, FongoCreator.class, DozerFactory.class})
+        EpisodeRepositoryMockFactory.class, FongoCreator.class, DozerFactory.class})
 public class PersistentEpisodeProviderTest {
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

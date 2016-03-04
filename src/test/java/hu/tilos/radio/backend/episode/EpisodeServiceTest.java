@@ -1,13 +1,9 @@
 package hu.tilos.radio.backend.episode;
 
-import com.github.fakemongo.Fongo;
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import hu.tilos.radio.backend.DozerFactory;
-import hu.tilos.radio.backend.FongoCreator;
-import hu.tilos.radio.backend.MongoTestDB;
-import hu.tilos.radio.backend.TestUtil;
+import hu.tilos.radio.backend.*;
 import hu.tilos.radio.backend.converters.FairEnoughHtmlSanitizer;
 import hu.tilos.radio.backend.converters.HTMLSanitizer;
 import hu.tilos.radio.backend.data.response.CreateResponse;
@@ -38,7 +34,7 @@ import static hu.tilos.radio.backend.MongoTestUtil.loadTo;
 @SpringApplicationConfiguration(classes = {EpisodeService.class, EpisodeUtil.class, TagUtil.class,
         StatService.class, PersistentEpisodeProvider.class, ScheduledEpisodeProvider.class, ExtraEpisodeProvider.class,
         Merger.class, ShowCache.class, TextConverter.class, HTMLSanitizer.class, FairEnoughHtmlSanitizer.class,
-        EpisodeRepository.class, FongoCreator.class, DozerFactory.class})
+        EpisodeRepositoryMockFactory.class, FongoCreator.class, DozerFactory.class})
 public class EpisodeServiceTest {
 
     @Inject
@@ -49,6 +45,8 @@ public class EpisodeServiceTest {
 
     @Inject
     FongoRule fongoRule;
+
+
 
     @Rule
     public FongoRule fongoRule() {
