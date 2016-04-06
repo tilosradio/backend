@@ -8,16 +8,19 @@ import hu.tilos.radio.backend.event.Event;
 import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.data.types.TextData;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.*;
 
 /**
  * Json transfer object for episodes;
  */
+@Document(collection = "episode")
 public class EpisodeData extends EpisodeBase {
 
+    @Id()
     private String id;
-
 
     private ShowSimple show;
 

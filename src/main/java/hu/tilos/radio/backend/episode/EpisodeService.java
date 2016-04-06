@@ -51,7 +51,7 @@ public class EpisodeService {
     @Inject
     StatService statService;
 
-//    @Inject
+    //    @Inject
     EventService eventService;
 
     @Inject
@@ -358,7 +358,10 @@ public class EpisodeService {
 
     public void delete(String internalId) {
         EpisodeData episode = episodeRepository.findOne(internalId);
-        if (episode.getText()==null || episode.getText().getTitle() == null) {
+        if (episode == null) {
+            throw new IllegalArgumentException("No such episode " + internalId);
+        }
+        if (episode.getText() == null || episode.getText().getTitle() == null || episode.getText().getContent().trim().length() == 0) {
             episodeRepository.delete(internalId);
         } else {
             throw new RuntimeException("Episode has text. Can't be deleted");
