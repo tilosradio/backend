@@ -48,12 +48,12 @@ public class FeedService {
     private DozerBeanMapper mapper;
 
     @Cacheable("feed-weekly")
-    public Feed weeklyFeed() {
-        return weeklyFeed(null);
+    public Feed weeklyFeed(String format) {
+        return weeklyFeed(null, format);
     }
 
     @Cacheable("feed-weekly-type")
-    public Feed weeklyFeed(String type) {
+    public Feed weeklyFeed(String type, String format) {
         Date now = new Date();
         Date weekAgo = new Date();
         weekAgo.setTime(now.getTime() - (long) 604800000L);
@@ -65,6 +65,7 @@ public class FeedService {
         Feed feed = feedRenderer.generateFeed(episodes,
                 "urn:radio-tilos-hu:weekly" + (type == null ? "" : "." + type),
                 "weekly" + (type == null ? "" : "-" + type),
+                format,
                 true);
 
 
@@ -82,11 +83,16 @@ public class FeedService {
 
     @Cacheable("feed-tilos")
     public Feed tilosFeed() {
-        return tilosFeed(null);
+        return tilosFeed(null, null);
     }
 
     @Cacheable("feed-tilos-type")
     public Feed tilosFeed(String type) {
+        return tilosFeed(type, "mp3");
+    }
+
+    @Cacheable("feed-tilos-type-format")
+    public Feed tilosFeed(String type, String format) {
         Date now = new Date();
         Date weekAgo = new Date();
         weekAgo.setTime(now.getTime() - 3L * 604800000L);
@@ -109,6 +115,7 @@ public class FeedService {
                 episodes,
                 "urn:radio-tilos-hu:podcast" + (type == null ? "" : "." + type)
                 , "podcast" + (type == null ? "" : ("-" + type))
+                , format
                 , true);
 
         if (type == null) {
@@ -165,11 +172,11 @@ public class FeedService {
 
 
     @Cacheable("feed-show")
-    public Feed showFeed(String alias, String selector) {
-        return showFeed(alias, null, selector);
+    public Feed showFeed(String alias, String selector, String format) {
+        return showFeed(alias, null, selector, format);
     }
 
-    public Feed showFeed(String alias, String year, String selector) {
+    public Feed showFeed(String alias, String year, String selector, String format) {
         //{year: (/.*)?
         //,
         if (year == null) {
@@ -202,7 +209,7 @@ public class FeedService {
         });
 
 
-        Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, false);
+        Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, format, false);
 
         //generate header
 

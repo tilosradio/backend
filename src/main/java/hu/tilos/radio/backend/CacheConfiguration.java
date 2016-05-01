@@ -21,7 +21,7 @@ public class CacheConfiguration {
         for (String cacheName : new String[]{"episodes", "episodes-next", "episodes-last", "episodes-lastweek"}) {
             caches.add(new GuavaCache(cacheName, CacheBuilder.newBuilder().expireAfterWrite(2, TimeUnit.MINUTES).recordStats().build()));
         }
-        for (String cacheName : new String[]{"feed-weekly-type", "feed-show", "feed-tilos", "feed-tilos-type","feed-weekly","m3u"}) {
+        for (String cacheName : new String[]{"feed-tilos-type-format", "feed-weekly-type", "feed-show", "feed-tilos", "feed-tilos-type", "feed-weekly", "m3u"}) {
             caches.add(new GuavaCache(cacheName, CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.MINUTES).recordStats().build()));
         }
         cacheManager.setCaches(caches);

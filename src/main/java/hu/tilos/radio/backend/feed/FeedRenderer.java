@@ -35,12 +35,11 @@ public class FeedRenderer {
     @Value("${server.url}")
     private String serverUrl;
 
-
-    public static String createDownloadURI(EpisodeData episode, String selector) {
+    public static String createDownloadURI(EpisodeData episode, String selector, String format) {
         return "http://tilos.hu/mp3/tilos-" +
                 YYYYMMDD.format(episode.getRealFrom()) + "-" +
                 HHMMSS.format(episode.getRealFrom()) + "-" +
-                HHMMSS.format(episode.getRealTo()) + ".mp3" + (selector == null ? "" : "?s=" + selector);
+                HHMMSS.format(episode.getRealTo()) + "." + format + (selector == null ? "" : "?s=" + selector);
     }
 
     private static Date dateFromEpoch(long realTo) {
@@ -49,11 +48,11 @@ public class FeedRenderer {
         return d;
     }
 
-    public Feed generateFeed(List<EpisodeData> episodeData, String id) {
-        return generateFeed(episodeData, id, null, false);
+    public Feed generateFeed(List<EpisodeData> episodeData, String id, String format) {
+        return generateFeed(episodeData, id, null, format, false);
     }
 
-    public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, boolean prefixedWithShowName) {
+    public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName) {
         Feed feed = new Feed();
         feed.getAnyOther().add(new Author("Tilos Radio"));
         try {
@@ -104,7 +103,7 @@ public class FeedRenderer {
                     Link sound = new Link();
                     sound.setType(new MediaType("audio", "mpeg"));
                     sound.setRel("enclosure");
-                    sound.setHref(new URI(createDownloadURI(episode, selector)));
+                    sound.setHref(new URI(createDownloadURI(episode, selector, format)));
                     e.getLinks().add(sound);
 
 
