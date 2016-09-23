@@ -224,7 +224,7 @@ public class FeedService {
         feedLink.setHref(uri(serverUrl + "/showFeed/show/" + show.getAlias() + yearPostfix));
 
         feed.getLinks().add(feedLink);
-        feed.setId(uri("http://tilos.hu/show/" + show.getAlias() + yearPostfix));
+        feed.setId(uri("https://tilos.hu/show/" + show.getAlias() + yearPostfix));
 
         return feed;
 

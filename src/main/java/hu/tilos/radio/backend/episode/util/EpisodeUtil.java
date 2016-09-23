@@ -230,7 +230,7 @@ public class EpisodeUtil {
     }
 
     public static String linkGenerator(Date from, Date to) {
-        return "http://tilos.hu/mp3/tilos-" +
+        return "https://archive.tilos.hu/mp3/tilos-" +
                 YYYYMMDD.format(from) +
                 "-" +
                 HHMMSS.format(from) +

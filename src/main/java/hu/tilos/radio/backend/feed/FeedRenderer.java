@@ -36,7 +36,7 @@ public class FeedRenderer {
     private String serverUrl;
 
     public static String createDownloadURI(EpisodeData episode, String selector, String format) {
-        return "http://tilos.hu/mp3/tilos-" +
+        return "https://archive.tilos.hu/mp3/tilos-" +
                 YYYYMMDD.format(episode.getRealFrom()) + "-" +
                 HHMMSS.format(episode.getRealFrom()) + "-" +
                 HHMMSS.format(episode.getRealTo()) + "." + format + (selector == null ? "" : "?s=" + selector);
