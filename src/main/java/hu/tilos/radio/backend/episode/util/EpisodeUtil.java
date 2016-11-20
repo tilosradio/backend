@@ -111,7 +111,6 @@ public class EpisodeUtil {
     }
 
 
-
     private void addBookmarkTo(BookmarkData bookmark, List<EpisodeData> merged) {
         Optional<EpisodeData> episode = merged.stream().max((e1, e2) -> getIntersection(e1, bookmark).compareTo(getIntersection(e2, bookmark)));
         if (episode.isPresent()) {
@@ -150,6 +149,7 @@ public class EpisodeUtil {
         newMongoOBject.put("plannedFrom", episode.getPlannedFrom());
         newMongoOBject.put("plannedTo", episode.getPlannedTo());
         newMongoOBject.put("realFrom", episode.getRealFrom());
+        newMongoOBject.put("extra", false);
         newMongoOBject.put("realTo", episode.getRealTo());
 
         BasicDBObject show = new BasicDBObject();

@@ -76,6 +76,11 @@ public class EpisodeService {
         return r;
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     @Cacheable("episodes")
     public List<EpisodeData> listEpisodes(String showAlias, long from, long to) {
         Date fromDate = new Date();
@@ -350,7 +355,11 @@ public class EpisodeService {
         newMongoOBject.remove("id");
         newMongoOBject.remove("persistent");
 
-        db.getCollection("episode").insert(newMongoOBject);
+        BasicDBObject query = new BasicDBObject();
+        query.put("plannedFrom", newMongoOBject.get("plannedFrom"));
+        query.put("plannedTo", newMongoOBject.get("plannedTo"));
+
+        db.getCollection("episode").update(query, newMongoOBject, true, false);
 
         return new CreateResponse(((ObjectId) newMongoOBject.get("_id")).toHexString());
     }
