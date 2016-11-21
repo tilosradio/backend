@@ -121,7 +121,6 @@ public class EpisodeServiceTest {
 
 
     @Test
-    @Ignore
     public void testCreateEpisode() throws Exception {
         //given
         String showId = loadTo(fongoRule, "show", "show-3utas.json");

@@ -1,9 +1,6 @@
 package hu.tilos.radio.backend.episode;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.*;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.OkResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
@@ -359,9 +356,10 @@ public class EpisodeService {
         query.put("plannedFrom", newMongoOBject.get("plannedFrom"));
         query.put("plannedTo", newMongoOBject.get("plannedTo"));
 
-        db.getCollection("episode").update(query, newMongoOBject, true, false);
+        WriteResult episode = db.getCollection("episode").update(query, newMongoOBject, true, false);
 
-        return new CreateResponse(((ObjectId) newMongoOBject.get("_id")).toHexString());
+        Object upsertedId = episode.getUpsertedId();
+        return new CreateResponse(((ObjectId) upsertedId).toHexString());
     }
 
 
