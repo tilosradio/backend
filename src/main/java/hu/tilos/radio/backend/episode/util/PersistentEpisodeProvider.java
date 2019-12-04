@@ -36,7 +36,7 @@ public class PersistentEpisodeProvider {
 
 
         if (showAlias != null) {
-            query.put("show.ref", new DBRef(db, "show", showAlias));
+            query.put("show.ref", new DBRef("tilos", "show", showAlias));
         }
 
         DBCursor episodes = db.getCollection("episode").find(query);

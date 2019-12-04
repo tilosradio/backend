@@ -155,7 +155,8 @@ public class EpisodeUtil {
         BasicDBObject show = new BasicDBObject();
         show.put("alias", episode.getShow().getAlias());
         show.put("name", episode.getShow().getName());
-        show.put("ref", new DBRef(db, "show", episode.getShow().getId()));
+        show.put("ref",
+            new DBRef("tilos", "show", episode.getShow().getId().toString()));
 
         episode.setPersistent(true);
 
@@ -163,7 +164,8 @@ public class EpisodeUtil {
         try {
             db.getCollection("episode").insert(newMongoOBject);
         } catch (Exception ex) {
-            LOG.error("Can't persist generated episode: " + episode.getShow().getAlias() + "/" + episode.getRealFrom());
+            LOG.error("Can't persist generated episode: " + episode.getShow()
+                .getAlias() + "/" + episode.getRealFrom(), ex);
         }
     }
 

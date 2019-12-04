@@ -29,13 +29,14 @@ public class MongoConfiguration extends AbstractMongoConfiguration {
         return mongoDb;
     }
 
-    @Override
-    public Mongo mongo() throws Exception {
-        return new MongoClient(mongoHost);
-    }
 
     @Override
     public CustomConversions customConversions() {
         return new CustomConversions(Arrays.asList(new FromLocalDateTime(), new ToLocalDateTime(), new FromLocalDate(), new ToLocalDate()));
+    }
+
+    @Override
+    public MongoClient mongoClient() {
+        return new MongoClient(mongoHost);
     }
 }
