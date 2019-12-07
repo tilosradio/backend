@@ -20,7 +20,7 @@
   ],
   "show": {
     "name": "3. utas",
-    "alias": "3utas",
+    "alias": "3-utas",
     "ref": {
       "$ref": "show",
       "$id": "<REF1>"

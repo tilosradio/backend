@@ -17,6 +17,7 @@ import org.dozer.DozerBeanMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -47,6 +48,8 @@ public class EpisodeService {
 
     @Inject
     StatService statService;
+
+
 
     //    @Inject
     EventService eventService;

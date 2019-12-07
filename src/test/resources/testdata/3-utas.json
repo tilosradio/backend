@@ -1,0 +1,69 @@
+{
+  "show": [
+    {
+      "id": 1,
+      "name": "3. utas",
+      "alias": "3-utas",
+      "description": "a potyoutasok műsora",
+      "type": 0,
+      "status": 1,
+      "schedulings": [
+        {
+          "validFrom": {
+            "$date": "2014-04-15T10:00:00.000Z"
+          },
+          "validTo": {
+            "$date": "2014-06-10T10:00:00.000Z"
+          },
+          "hourFrom": 8,
+          "minFrom": 0,
+          "duration": 120,
+          "weekType": 1,
+          "base": {
+            "$date": "2014-04-15T10:00:00.000Z"
+          },
+          "weekDay": 5
+        }
+      ]
+    }
+  ],
+  "episode": [
+    {
+      "id": 2,
+      "plannedFrom": {
+        "$date": "2014-04-11T08:00:00.000Z"
+      },
+      "plannedTo": {
+        "$date": "2014-04-11T10:00:00.000Z"
+      },
+      "realFrom": {
+        "$date": "2014-04-11T08:00:00.000Z"
+      },
+      "realTo": {
+        "$date": "2014-04-11T10:00:00.000Z"
+      },
+      "show": {
+        "name": "3. utas",
+        "alias": "3-utas",
+        "ref": {
+          "$ref": "show",
+          "$id": "<REF1>"
+        }
+      },
+      "text": {
+        "title": "Jo musor",
+        "type": "episode",
+        "format": "legacy",
+        "content": "fasza am",
+        "author": "asd",
+        "alias": "asd",
+        "created": {
+          "$date": "2012-12-12T12:12:12.000Z"
+        },
+        "modified": {
+          "$date": "2012-12-12T12:12:12.000Z"
+        }
+      }
+    }
+  ]
+}

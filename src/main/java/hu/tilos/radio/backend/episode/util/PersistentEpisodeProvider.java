@@ -2,7 +2,9 @@ package hu.tilos.radio.backend.episode.util;
 
 
 import com.mongodb.*;
+import static hu.tilos.radio.backend.MongoUtil.aliasOrId;
 import hu.tilos.radio.backend.episode.EpisodeData;
+import org.bson.types.ObjectId;
 import org.dozer.DozerBeanMapper;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +27,8 @@ public class PersistentEpisodeProvider {
     @Inject
     private DB db;
 
-
-    public List<EpisodeData> listEpisode(String showAlias, Date from, Date to) {
+    public List<EpisodeData> listEpisode(String showIdOrAlias, Date from,
+        Date to) {
 
 
         BasicDBObject query = new BasicDBObject();
@@ -34,11 +36,22 @@ public class PersistentEpisodeProvider {
         query.put("plannedFrom", new BasicDBObject("$lt", to));
         query.put("plannedTo", new BasicDBObject("$gt", from));
 
+        if (showIdOrAlias != null) {
 
-        if (showAlias != null) {
-            query.put("show.ref", new DBRef("tilos", "show", showAlias));
+            BasicDBObject q = aliasOrId(showIdOrAlias);
+
+            DBCursor shows = db.getCollection("show").find(q);
+            if (!shows.hasNext()) {
+                throw new IllegalArgumentException(
+                    "No such show " + showIdOrAlias);
+
+            }
+
+            DBObject show = shows.next();
+            System.out.println(show.get("_id"));
+            query.put("show.ref.$id", show.get("_id").toString());
         }
-
+        System.out.println(query.toString());
         DBCursor episodes = db.getCollection("episode").find(query);
 
         List<EpisodeData> result = new ArrayList<>();
