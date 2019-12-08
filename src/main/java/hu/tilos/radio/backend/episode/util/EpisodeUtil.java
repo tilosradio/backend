@@ -59,7 +59,7 @@ public class EpisodeUtil {
     public EpisodeData enrichEpisode(EpisodeData r) {
         try {
             linkGenerator(r);
-            statCalculator(r);
+            //statCalculator(r);
             r.setShow(showCache.getShowSimple(r.getShow().getId()));
             if (r.getText() != null) {
                 if (r.getText().getFormat() == null) {

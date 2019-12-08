@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: episode
+  name: episode
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  selector:
+    matchLabels:
+      component: episode
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        component: episode
+    spec:
+      containers:
+      - command:
+        - java
+        - -jar
+        - /home/tilos/episode.jar
+        - --spring.config.location=file:/etc/tilos/tilos.properties
+        image: quay.io/tilosradio/episode@sha256:7eaa86c6ea43814589c0f9d5efd46c04df45a8cb18a3542bd2d121be543d167f
+        imagePullPolicy: IfNotPresent
+        name: episode
+        ports:
+        - containerPort: 9200
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /etc/tilos
+          name: config
+      restartPolicy: Always
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: tilos
+        name: config
