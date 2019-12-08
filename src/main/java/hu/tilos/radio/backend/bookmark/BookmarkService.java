@@ -44,7 +44,8 @@ public class BookmarkService {
         bookmark.put("created", new Date());
 
         BasicDBObject creator = new BasicDBObject();
-        creator.put("ref", new DBRef("tilos", "user", new ObjectId(session.getCurrentUser().getId())));
+        creator.put("ref",
+            new DBRef("user", new ObjectId(session.getCurrentUser().getId())));
         creator.put("username", session.getCurrentUser().getUsername());
         bookmark.put("creator", creator);
         if (episode.get("bookmarks") == null) {

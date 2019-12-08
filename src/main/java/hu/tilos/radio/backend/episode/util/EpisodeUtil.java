@@ -156,7 +156,7 @@ public class EpisodeUtil {
         show.put("alias", episode.getShow().getAlias());
         show.put("name", episode.getShow().getName());
         show.put("ref",
-            new DBRef("tilos", "show", episode.getShow().getId().toString()));
+            new DBRef("show", episode.getShow().getId()));
 
         episode.setPersistent(true);
 

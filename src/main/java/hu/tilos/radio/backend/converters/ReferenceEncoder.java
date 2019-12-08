@@ -38,7 +38,7 @@ public class ReferenceEncoder implements CustomConverter {
                     reference.put(field, original.get(field));
                 }
             }
-            reference.put("ref", new DBRef("tilos", "show", original.get("_id").toString()));
+            reference.put("ref", new DBRef("show", original.get("_id")));
             return reference;
         } catch (Exception e) {
             throw new RuntimeException(e);

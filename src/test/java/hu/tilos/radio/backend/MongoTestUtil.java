@@ -2,6 +2,7 @@ package hu.tilos.radio.backend;
 
 import com.github.fakemongo.junit.FongoRule;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
@@ -18,7 +19,10 @@ public class MongoTestUtil {
   public static final Logger LOG = LoggerFactory.getLogger(MongoTestUtil.class);
 
   public static void dropCollection(DB db, String collection) {
-    db.getCollection(collection).drop();
+    DBCollection collection1 = db.getCollection(collection);
+    if (collection != null) {
+      collection1.drop();
+    }
   }
   public static String loadTo(DB db, String collection,
       String resourceName, String... references) {
