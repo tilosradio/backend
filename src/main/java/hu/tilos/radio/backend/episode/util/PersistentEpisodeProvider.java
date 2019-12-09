@@ -48,7 +48,10 @@ public class PersistentEpisodeProvider {
             }
 
             DBObject show = shows.next();
-            query.put("show.ref.$id", show.get("_id").toString());
+            BasicDBList or = new BasicDBList();
+            or.add(new BasicDBObject("show.ref.$id", show.get("_id").toString()));
+            or.add(new BasicDBObject("show.ref.$id", show.get("_id")));
+            query.put("$or", or);
         }
         DBCursor episodes = db.getCollection("episode").find(query);
 
