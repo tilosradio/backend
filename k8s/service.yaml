@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: episode
+  name: backend
 spec:
   ports:
   - nodePort: 32203
@@ -9,5 +9,5 @@ spec:
     protocol: TCP
     targetPort: 9150
   selector:
-    component: episode
+    component: backend
   type: NodePort

@@ -2,30 +2,30 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    component: episode
-  name: episode
+    component: backend
+  name: backend
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   selector:
     matchLabels:
-      component: episode
+      component: backend
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        component: episode
+        component: backend
     spec:
       containers:
       - command:
         - java
         - -jar
-        - /home/tilos/episode.jar
+        - /home/tilos/backend.jar
         - --spring.config.location=file:/etc/tilos/tilos.properties
-        image: quay.io/tilosradio/episode@sha256:7eaa86c6ea43814589c0f9d5efd46c04df45a8cb18a3542bd2d121be543d167f
+        image: quay.io/tilosradio/backend@sha256:7eaa86c6ea43814589c0f9d5efd46c04df45a8cb18a3542bd2d121be543d167f
         imagePullPolicy: IfNotPresent
-        name: episode
+        name: backend
         ports:
         - containerPort: 9200
           protocol: TCP

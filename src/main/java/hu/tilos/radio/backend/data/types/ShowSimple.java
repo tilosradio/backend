@@ -1,5 +1,6 @@
 package hu.tilos.radio.backend.data.types;
 
+import hu.tilos.radio.backend.show.ShowStatus;
 
 public class ShowSimple {
 
@@ -10,6 +11,8 @@ public class ShowSimple {
     public String alias;
 
     public ShowType type;
+
+    public ShowStatus status;
 
     public String getId() {
         return id;
@@ -43,5 +46,11 @@ public class ShowSimple {
         this.type = type;
     }
 
+    public ShowStatus getStatus() {
+        return status;
+    }
 
+    public void setStatus(ShowStatus status) {
+        this.status = status;
+    }
 }
