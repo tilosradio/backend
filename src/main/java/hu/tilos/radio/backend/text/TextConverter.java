@@ -1,8 +1,6 @@
-package hu.tilos.radio.backend.util;
+package hu.tilos.radio.backend.text;
 
 import hu.tilos.radio.backend.converters.FairEnoughHtmlSanitizer;
-import hu.tilos.radio.backend.converters.HTMLSanitizer;
-import hu.tilos.radio.backend.tag.TagUtil;
 import org.pegdown.Extensions;
 import org.pegdown.LinkRenderer;
 import org.pegdown.PegDownProcessor;
@@ -20,18 +18,15 @@ public class TextConverter {
     private static final Pattern YOUTUBE = Pattern.compile("^\\s*(?![\"\\[\\(])(?:https?:)?(//)?(?:www\\.)?(?:youtube\\.com|youtu\\.be)\\S+\\s*$", Pattern.MULTILINE);
 
     @Inject
-    HTMLSanitizer liberalSanitizer;
-
-    @Inject
-    TagUtil tagUtil;
+    LiberalHTMLSanitizer liberalSanitizer;
 
     @Inject
     FairEnoughHtmlSanitizer fairSanitizer;
 
-    private PegDownProcessor pegdown;
+
 
     public TextConverter() {
-        this.pegdown = new PegDownProcessor(Extensions.HARDWRAPS | Extensions.AUTOLINKS);
+
     }
 
     public String format(String type, String content) {
@@ -39,19 +34,19 @@ public class TextConverter {
             return content;
         }
         if (type.equals("default") || type.equals("legacy") || type.equals("normal")) {
-            return tagUtil.replaceToHtml(liberalSanitizer.clean(content));
+            return liberalSanitizer.clean(content);
         } else if (type.equals("markdown")) {
             content = fairSanitizer.clean(content);
             String youtubized = youtubize(content);
             String cleanAt = youtubized.replaceAll("&#64;", "@");
-            String tagged = tagUtil.htmlize(cleanAt);
-            return parseMarkdown(tagged);
+            return parseMarkdown(cleanAt);
 
         }
         throw new IllegalArgumentException("Unkown content type: " + type);
     }
 
-    protected String parseMarkdown(String tagged) {
+    public String parseMarkdown(String tagged) {
+        PegDownProcessor pegdown = new PegDownProcessor(Extensions.HARDWRAPS | Extensions.AUTOLINKS);
         return pegdown.markdownToHtml(tagged, new LinkRenderer() {
             @Override
             public Rendering render(ExpLinkNode node, String text) {

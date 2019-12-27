@@ -9,8 +9,8 @@ import hu.tilos.radio.backend.data.types.TextData;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.stat.StatService;
+import hu.tilos.radio.backend.text.TextConverter;
 import hu.tilos.radio.backend.util.ShowCache;
-import hu.tilos.radio.backend.util.TextConverter;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;

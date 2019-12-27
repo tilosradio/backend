@@ -1,5 +1,6 @@
 package hu.tilos.radio.backend.util;
 
+import hu.tilos.radio.backend.text.TextConverter;
 import org.junit.Assert;
 import org.junit.Test;
 
