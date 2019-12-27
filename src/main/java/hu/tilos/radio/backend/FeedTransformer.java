@@ -1,18 +1,16 @@
 package hu.tilos.radio.backend;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
-import net.anzix.jaxrs.atom.*;
-import net.anzix.jaxrs.atom.Summary;
-import net.anzix.jaxrs.atom.itunes.*;
-
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
-import java.net.URI;
-import java.util.Date;
 import java.util.HashSet;
+
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+import net.anzix.jaxrs.atom.Entry;
+import net.anzix.jaxrs.atom.Feed;
+import net.anzix.jaxrs.atom.itunes.Summary;
+
 
 public class FeedTransformer {
 
@@ -36,7 +34,7 @@ public class FeedTransformer {
     }
 
     private Marshaller createMarshaller() throws JAXBException {
-        JAXBContext ctx = JAXBContext.newInstance(Feed.class);
+        JAXBContext ctx = JAXBContext.newInstance(Feed.class, Summary.class);
 
 
         Marshaller marshaller = ctx.createMarshaller();

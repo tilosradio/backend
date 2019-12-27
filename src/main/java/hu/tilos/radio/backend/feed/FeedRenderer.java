@@ -83,9 +83,11 @@ public class FeedRenderer {
                         e.setSummary(new Summary("adás archívum"));
                     }
 
-                    e.getAnyOther().add(new net.anzix.jaxrs.atom.itunes.Summary(e.getSummary().getContent()));
+                    e.setITunesSummary(e.getSummary().getContent());
+                    e.setITunesDuration(
+                        (episode.getRealTo().getTime() - episode.getRealFrom()
+                            .getTime()) / 100);
 
-                    e.getAnyOther().add(new Duration((episode.getRealTo().getTime() - episode.getRealFrom().getTime()) / 100));
 
                     e.setPublished(episode.getRealTo());
                     e.setUpdated(episode.getRealTo());

@@ -201,12 +201,9 @@ public class FeedService {
         }
 
         List<EpisodeData> episodeData = episodeUtil.getEpisodeData("" + show.getId(), start, end);
-        Collections.sort(episodeData, new Comparator<EpisodeData>() {
-            @Override
-            public int compare(EpisodeData episodeData, EpisodeData episodeData2) {
-                return episodeData2.getPlannedFrom().compareTo(episodeData.getPlannedFrom());
-            }
-        });
+        Collections.sort(episodeData,
+            (episodeData1, episodeData2) -> episodeData2.getPlannedFrom().compareTo(
+                episodeData1.getPlannedFrom()));
 
 
         Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, format, false);
