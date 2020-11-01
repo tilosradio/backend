@@ -23,11 +23,12 @@ spec:
         - -jar
         - /home/tilos/backend.jar
         - --spring.config.location=file:/etc/tilos/tilos.properties
-        image: quay.io/tilosradio/backend@sha256:7eaa86c6ea43814589c0f9d5efd46c04df45a8cb18a3542bd2d121be543d167f
+        image: quay.io/tilosradio/backend@sha256:f89f529dd0c178a315091d96702a0f5099cdbd2552e9729a28746a0db63ba7cf
+#        image: quay.io/tilosradio/backend@sha256:7eaa86c6ea43814589c0f9d5efd46c04df45a8cb18a3542bd2d121be543d167f
         imagePullPolicy: IfNotPresent
         name: backend
         ports:
-        - containerPort: 9200
+        - containerPort: 9150
           protocol: TCP
         resources: {}
         volumeMounts:
