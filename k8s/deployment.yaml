@@ -16,6 +16,10 @@ spec:
     metadata:
       labels:
         component: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9150"
+        prometheus.io/path: /actuator/prometheus
     spec:
       containers:
       - command:
@@ -23,7 +27,7 @@ spec:
         - -jar
         - /home/tilos/backend.jar
         - --spring.config.location=file:/etc/tilos/tilos.properties
-        image: quay.io/tilosradio/backend@sha256:f89f529dd0c178a315091d96702a0f5099cdbd2552e9729a28746a0db63ba7cf
+        image: quay.io/tilosradio/backend@sha256:f6acc2b666f624f2910b2041d125a3b47713c89be8cd3b1712346649ae5fd82f
 #        image: quay.io/tilosradio/backend@sha256:7eaa86c6ea43814589c0f9d5efd46c04df45a8cb18a3542bd2d121be543d167f
         imagePullPolicy: IfNotPresent
         name: backend
@@ -34,9 +38,15 @@ spec:
         volumeMounts:
         - mountPath: /etc/tilos
           name: config
+        - mountPath: /home/tilos/upload
+          name: upload
       restartPolicy: Always
       volumes:
       - configMap:
           defaultMode: 420
           name: tilos
         name: config
+      - name: upload
+        hostPath:
+          path: /home/tilos/upload
+          type: Directory
