@@ -31,9 +31,8 @@ public class JwtFilter extends GenericFilterBean {
         req = (HttpServletRequest) request;
 
         String stringToken = req.getHeader("Authorization");
-
-
-        if (stringToken != null && !stringToken.equals("")) {
+        final String url = ((HttpServletRequest) request).getRequestURI();
+        if (!url.startsWith("/actuator") && stringToken != null && !stringToken.equals("")) {
             try {
                 stringToken = stringToken.replaceAll("Bearer ", "");
                 SignedJWT sjwt = SignedJWT.parse(stringToken);
