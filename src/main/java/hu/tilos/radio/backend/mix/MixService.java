@@ -2,7 +2,6 @@ package hu.tilos.radio.backend.mix;
 
 import com.mongodb.*;
 import hu.tilos.radio.backend.contribution.ShowReference;
-import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.util.AvatarLocator;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -62,6 +61,7 @@ public class MixService {
         mix.setType(MixType.values()[(int) obj.get("type")]);
         mix.setTitle((String) obj.get("title"));
         mix.setFile((String) obj.get("file"));
+        mix.setDate((String) obj.get("date"));
         mix.setAuthor((String) obj.get("author"));
         mix.setContent((String) obj.get("content"));
         mix.setWithContent(mix.getContent() != null && mix.getContent().length() > 0);
@@ -71,8 +71,11 @@ public class MixService {
     }
 
     private String fixLink(String file) {
-        if (!file.startsWith(LOCATION)) {
+        if (!file.startsWith(LOCATION) && !file.startsWith("http") && !file.contains("archive.tilos.hu")) {
             return LOCATION + file;
+        }
+        if (file.contains("archive.tilos.hu") && !file.startsWith("http")) {
+            return "http://" + file;
         }
         return file;
     }

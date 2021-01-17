@@ -27,7 +27,7 @@ spec:
         - -jar
         - /home/tilos/backend.jar
         - --spring.config.location=file:/etc/tilos/tilos.properties
-        image: quay.io/tilosradio/backend@sha256:819b0fe5f1942715beee86019f0b335196d1dc091355182be9a12a84eaa2b1ce
+        image: quay.io/tilosradio/backend@sha256:74861a721a6baf18ee9aca2e00981301ebefe6b0f917c1ab0c3ab3322ed64671
 #        image: quay.io/tilosradio/backend@sha256:4521085da3eb91c990696056fb53688a43b3cb61b6191ba8667afe094b01acb2
 #        image: quay.io/tilosradio/backend@sha256:f6acc2b666f624f2910b2041d125a3b47713c89be8cd3b1712346649ae5fd82f
 #        image: quay.io/tilosradio/backend@sha256:7eaa86c6ea43814589c0f9d5efd46c04df45a8cb18a3542bd2d121be543d167f

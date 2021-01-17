@@ -8,6 +8,7 @@ public class Mix {
     private String link;
     private String file;
     private String title;
+    private String date;
     private MixCategory category;
     private MixType type;
     private ShowReference show;
@@ -92,5 +93,13 @@ public class Mix {
 
     public void setWithContent(boolean withContent) {
         this.withContent = withContent;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
