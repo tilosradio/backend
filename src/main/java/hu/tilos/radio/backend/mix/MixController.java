@@ -22,8 +22,8 @@ public class MixController {
     private MixService mixService;
 
     @RequestMapping(value = "/api/v1/mix")
-    public List<Mix> list(@RequestParam(name = "category") String category) {
-        return mixService.list(category);
+    public List<Mix> list(@RequestParam(name = "category", required = false) String category, @RequestParam(name = "show", required = false) String show) {
+        return mixService.list(category, show);
     }
 
     @RequestMapping(value = "/api/v1/mix/{id}")

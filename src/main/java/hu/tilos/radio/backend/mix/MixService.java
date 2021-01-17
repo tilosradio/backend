@@ -23,10 +23,17 @@ public class MixService {
     @Inject
     private DB db;
 
-    public List<Mix> list(String category) {
+    public List<Mix> list(String category, String show) {
 
-        DBCursor mixes = db.getCollection("mix").find(new BasicDBObject("category", MixCategory.valueOf(category.toUpperCase()).ordinal()));
 
+        DBCursor mixes = null;
+        if (category == null && show == null) {
+            mixes = db.getCollection("mix").find();
+        } else if (category != null) {
+            mixes = db.getCollection("mix").find(new BasicDBObject("category", MixCategory.valueOf(category.toUpperCase()).ordinal()));
+        } else if (show != null) {
+            mixes = db.getCollection("mix").find(new BasicDBObject("show.alias", show));
+        }
         List<Mix> result = new ArrayList<>();
         for (DBObject mix : mixes) {
             result.add(fromMongoMix(mix));
