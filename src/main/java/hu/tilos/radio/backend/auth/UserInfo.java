@@ -1,5 +1,7 @@
 package hu.tilos.radio.backend.auth;
 
+import hu.tilos.radio.backend.data.Author;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,13 +15,11 @@ public class UserInfo {
 
     private String id;
 
+    private Author author;
+
     private List<String> permissions = new ArrayList<>();
 
     public UserInfo() {
-    }
-
-    public UserInfo(String username) {
-        this.username = username;
     }
 
     public UserInfo(String id, String username) {
@@ -39,6 +39,13 @@ public class UserInfo {
         this.permissions = permissions;
     }
 
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
 
     public String getUsername() {
         return username;

@@ -51,7 +51,6 @@ public class ShowService {
     private DozerBeanMapper mapper;
 
     @Inject
-
     private RecaptchaValidator captchaValidator;
 
     @Inject
@@ -198,10 +197,10 @@ public class ShowService {
     }
 
     public OkResponse contact(String alias, MailToShow mailToSend) {
-        ValidationResult validate = captchaValidator.validate(mailToSend.getCaptcha());
-        if (!validate.isSuccess()) {
-            throw new IllegalArgumentException("Rosszul megadott Captcha: " + validate.toString());
-        }
+//        ValidationResult validate = captchaValidator.validate(mailToSend.getCaptcha());
+//        if (!validate.isSuccess()) {
+//            throw new IllegalArgumentException("Rosszul megadott Captcha: " + validate.toString());
+//        }
         MimeMessage mail = mailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mail, false);

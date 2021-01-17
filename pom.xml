@@ -78,6 +78,11 @@
             <artifactId>jaxb-impl</artifactId>
             <version>2.2.7</version>
         </dependency>
+        <dependency>
+            <groupId>com.restfb</groupId>
+            <artifactId>restfb</artifactId>
+            <version>1.8.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.mandrillapp.wrapper.lutung</groupId>
