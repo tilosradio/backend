@@ -42,6 +42,9 @@ public class AuthService {
     EmailSender sender;
 
     @Inject
+    UserService userService;
+
+    @Inject
     DB db;
 
     @Inject
@@ -74,7 +77,9 @@ public class AuthService {
 
     private OkResponse changePassword(PasswordReset passwordReset) {
         BasicDBObject query = new BasicDBObject("email", passwordReset.getEmail());
-        query.put("passwordChangeToken", passwordReset.getToken());
+        if (userService.getCurrentUser() == null || userService.getCurrentUser().getRole() != Role.ADMIN) {
+            query.put("passwordChangeToken", passwordReset.getToken());
+        }
         DBObject userRaw = db.getCollection("user").findOne(query);
 
         if (userRaw == null) {
@@ -180,7 +185,7 @@ public class AuthService {
         if (user == null) {
             throw new AccessDeniedException("Access denied");
         }
-        if (authUtil.encode(loginData.getPassword(), (String) user.get("salt")).equals((String) user.get("password"))) {
+        if (authUtil.encode(loginData.getPassword(), (String) user.get("salt")).equals(user.get("password"))) {
             try {
                 if (!"".equals(sudo) && user.get("role_id").equals(Role.ADMIN.ordinal())) {
                     user = db.getCollection("user").findOne(new BasicDBObject("username", sudo));

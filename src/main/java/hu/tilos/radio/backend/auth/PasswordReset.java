@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 
 public class PasswordReset {
 
+    private String user;
     @NotNull
     private String token;
 
@@ -13,6 +14,14 @@ public class PasswordReset {
     @NotNull
     @Size(min = 8, max = 16)
     private String password;
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
 
     public String getToken() {
         return token;
