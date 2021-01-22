@@ -7,9 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +26,12 @@ public class AuthController {
     @Inject
     UserService userService;
 
-    @Inject
-    OauthService oauthService;
+
+    private OAuth2AuthorizedClientService authorizedClientService;
+//
+//    public AuthController(OAuth2AuthorizedClientService authorizedClientService) {
+//        this.authorizedClientService = authorizedClientService;
+//    }
 
     @RequestMapping(value = "/api/v1/auth/password_reset", method = RequestMethod.POST)
     public OkResponse passwordReset(@RequestBody PasswordReset passwordReset) {
@@ -42,7 +50,18 @@ public class AuthController {
 
     @RequestMapping(value = "/api/v1/user/me", method = RequestMethod.GET)
     public UserInfo profile() {
-        return userService.me(getCurrentSession());
+        return userService.me();
+    }
+
+
+    @GetMapping("/api/v1/oauth/client")
+    OAuth2AuthorizedClient authorizedClient(OAuth2AuthenticationToken authentication) {
+        return this.authorizedClientService.loadAuthorizedClient(authentication.getAuthorizedClientRegistrationId(), authentication.getName());
+    }
+
+    @GetMapping("/api/v1/oauth/info")
+    Map<String, Object> moreInfo(Principal user) {
+        return ((OAuth2AuthenticationToken) user).getPrincipal().getAttributes();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -52,19 +71,6 @@ public class AuthController {
         return userService.list();
     }
 
-    @RequestMapping(value = "/api/int/oauth/facebook", method = RequestMethod.POST)
-    public Map<String, String> facebook(@RequestBody OauthService.FacebookRequest request) {
-        return oauthService.facebook(request);
-    }
-
-    public Session getCurrentSession() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof JwtToken) {
-            JwtToken authToken = (JwtToken) auth;
-            return authToken.getSession();
-        }
-        return null;
-    }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No such element")
     @ExceptionHandler(NotFoundException.class)

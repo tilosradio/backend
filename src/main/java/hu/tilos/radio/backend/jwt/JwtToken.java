@@ -5,6 +5,7 @@ import com.nimbusds.jwt.SignedJWT;
 
 import hu.tilos.radio.backend.auth.Role;
 import hu.tilos.radio.backend.auth.Session;
+import hu.tilos.radio.backend.auth.UserInfo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,7 +23,8 @@ public class JwtToken implements Authentication {
     private JWTClaimsSet claims;
 
     private boolean authenticated;
-    private Session session;
+
+    private UserInfo userInfo;
 
     public JwtToken(SignedJWT sjwt) {
         this.sjwt = sjwt;
@@ -51,17 +53,17 @@ public class JwtToken implements Authentication {
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        if (session != null) {
-            if (session.getCurrentUser().getRole() == Role.ADMIN) {
+        if (userInfo != null) {
+            if (userInfo.getRole() == Role.ADMIN) {
                 grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
                 grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_AUTHOR"));
                 grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             }
-            if (session.getCurrentUser().getRole() == Role.AUTHOR) {
+            if (userInfo.getRole() == Role.AUTHOR) {
                 grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_AUTHOR"));
                 grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             }
-            if (session.getCurrentUser().getRole() == Role.USER) {
+            if (userInfo.getRole() == Role.USER) {
                 grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
             }
         }
@@ -102,13 +104,12 @@ public class JwtToken implements Authentication {
         }
     }
 
-    public void setSession(Session session) {
-        this.session = session;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
-    public Session getSession() {
-        return session;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
-
 }
 

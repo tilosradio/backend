@@ -238,15 +238,6 @@ public class AuthService {
     }
 
 
-    public Session getCurrentSession() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof JwtToken) {
-            JwtToken authToken = (JwtToken) auth;
-            return authToken.getSession();
-        }
-        return null;
-    }
-
 
     public String getServerUrl() {
         return serverUrl;

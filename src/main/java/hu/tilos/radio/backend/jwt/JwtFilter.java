@@ -37,7 +37,7 @@ public class JwtFilter extends GenericFilterBean {
                 stringToken = stringToken.replaceAll("Bearer ", "");
                 SignedJWT sjwt = SignedJWT.parse(stringToken);
                 JwtToken token = new JwtToken(sjwt);
-                Authentication auth = authenticationManager.authenticate((Authentication) token);
+                Authentication auth = authenticationManager.authenticate(token);
                 SecurityContextHolder.getContext().setAuthentication(auth);
             } catch (ParseException e) {
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package hu.tilos.radio.backend.author;
 
 import hu.tilos.radio.backend.auth.Session;
+import hu.tilos.radio.backend.auth.UserService;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.jwt.JwtToken;
@@ -18,6 +19,9 @@ public class AuthorController {
     @Inject
     private AuthorService authorService;
 
+    @Inject
+    UserService userService;
+
     @RequestMapping(value = "/api/v1/author")
     public List<AuthorListElement> list() {
         return authorService.list();
@@ -25,7 +29,7 @@ public class AuthorController {
 
     @RequestMapping(value = "/api/v1/author/{alias}")
     public AuthorDetailed get(@PathVariable String alias) {
-        return authorService.get(alias, getCurrentSession());
+        return authorService.get(alias, userService.getCurrentUser());
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -40,13 +44,6 @@ public class AuthorController {
         return authorService.update(alias, author);
     }
 
-    public Session getCurrentSession() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof JwtToken) {
-            JwtToken authToken = (JwtToken) auth;
-            return authToken.getSession();
-        }
-        return null;
-    }
+
 
 }

@@ -6,6 +6,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import hu.tilos.radio.backend.auth.Role;
 import hu.tilos.radio.backend.auth.Session;
+import hu.tilos.radio.backend.auth.UserInfo;
 import hu.tilos.radio.backend.data.error.NotFoundException;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
@@ -50,14 +51,14 @@ public class AuthorService {
     }
 
 
-    public AuthorDetailed get(String alias, Session session) {
+    public AuthorDetailed  get(String alias, UserInfo userInfo) {
         DBObject one = findAuthor(alias);
         if (one == null) {
             throw new NotFoundException("No such show");
         }
         AuthorDetailed author = mapper.map(one, AuthorDetailed.class);
         avatarLocator.locateAvatar(author);
-        if (session != null && session.getCurrentUser() != null && (session.getCurrentUser().getRole() == Role.ADMIN || session.getCurrentUser().getRole() == Role.AUTHOR)) {
+        if (userInfo != null && (userInfo.getRole() == Role.ADMIN || userInfo.getRole() == Role.AUTHOR)) {
             author.setEmail((String) one.get("email"));
         }
         return author;

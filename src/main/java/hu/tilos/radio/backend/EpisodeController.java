@@ -1,18 +1,14 @@
 package hu.tilos.radio.backend;
 
-import hu.tilos.radio.backend.auth.Session;
+import hu.tilos.radio.backend.auth.UserService;
 import hu.tilos.radio.backend.bookmark.BookmarkService;
-import hu.tilos.radio.backend.bookmark.BookmarkToSave;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.EpisodeService;
 import hu.tilos.radio.backend.episode.EpisodeToSave;
-import hu.tilos.radio.backend.jwt.JwtToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +19,8 @@ public class EpisodeController {
     @Autowired
     private EpisodeService episodeService;
 
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private BookmarkService bookmarkService;
@@ -98,21 +96,6 @@ public class EpisodeController {
     @RequestMapping(value = "/api/v1/episode", method = RequestMethod.POST)
     public CreateResponse create(@RequestBody EpisodeToSave episode) {
         return episodeService.create(episode);
-    }
-
-    @PreAuthorize("hasRole('ROLE_AUTHOR')")
-    @RequestMapping(value = "/api/v1/episode/{id}/bookmark", method = RequestMethod.POST)
-    public CreateResponse createBookmark(@PathVariable String id, @RequestBody BookmarkToSave bookmark) {
-        return bookmarkService.create(getCurrentSession(), id, bookmark);
-    }
-
-    public Session getCurrentSession() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth instanceof JwtToken) {
-            JwtToken authToken = (JwtToken) auth;
-            return authToken.getSession();
-        }
-        return null;
     }
 
 

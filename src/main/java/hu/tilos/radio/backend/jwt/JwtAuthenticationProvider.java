@@ -3,6 +3,7 @@ package hu.tilos.radio.backend.jwt;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
+import hu.tilos.radio.backend.auth.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,31 +18,34 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private String SecretKey;
 
     @Autowired
-    SessionInfoService sessionInfoService;
+    UserService userService;
 
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        JwtToken jwtToken = (JwtToken) authentication;
-        try {
-            JWSVerifier verifier = new MACVerifier(SecretKey);
-            boolean isVerified = jwtToken.getSignedToken().verify(verifier);
-            if (isVerified) {
-                jwtToken.setAuthenticated(true);
-                jwtToken.setSession(sessionInfoService.getSession(jwtToken.getUsername()));
-            } else {
-                throw new JwtAuthenticationException("authentication failed");
-            }
+        if (authentication instanceof JwtToken) {
+            JwtToken jwtToken = (JwtToken) authentication;
+            try {
+                JWSVerifier verifier = new MACVerifier(SecretKey);
+                boolean isVerified = jwtToken.getSignedToken().verify(verifier);
+                if (isVerified) {
+                    jwtToken.setAuthenticated(true);
+                    jwtToken.setUserInfo(userService.getUserByName(jwtToken.getUsername()));
+                } else {
+                    throw new JwtAuthenticationException("authentication failed");
+                }
 
-            return jwtToken;
-        } catch (JOSEException e) {
-            throw new JwtAuthenticationException("authentication failed: " + e.getMessage());
+                return jwtToken;
+            } catch (JOSEException e) {
+                throw new JwtAuthenticationException("authentication failed: " + e.getMessage());
+            }
         }
+        return authentication;
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
-        return true;
+        return authentication.equals(JwtToken.class);
     }
 
 }
