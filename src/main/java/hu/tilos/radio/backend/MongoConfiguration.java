@@ -2,10 +2,7 @@ package hu.tilos.radio.backend;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
-import hu.tilos.radio.backend.mongoconverters.FromLocalDate;
-import hu.tilos.radio.backend.mongoconverters.FromLocalDateTime;
-import hu.tilos.radio.backend.mongoconverters.ToLocalDate;
-import hu.tilos.radio.backend.mongoconverters.ToLocalDateTime;
+import hu.tilos.radio.backend.mongoconverters.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
@@ -32,7 +29,12 @@ public class MongoConfiguration extends AbstractMongoConfiguration {
 
     @Override
     public CustomConversions customConversions() {
-        return new CustomConversions(Arrays.asList(new FromLocalDateTime(), new ToLocalDateTime(), new FromLocalDate(), new ToLocalDate()));
+        return new CustomConversions(Arrays.asList(
+                new FromLocalDateTime(),
+                new ToLocalDateTime(),
+                new FromLocalDate(),
+                new ToLocalDate(),
+                new FromDbRef()));
     }
 
     @Override

@@ -1,10 +1,7 @@
 package hu.tilos.radio.backend;
 
 import com.github.fakemongo.junit.FongoRule;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import com.mongodb.util.JSON;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -18,17 +15,19 @@ public class MongoTestUtil {
 
   public static final Logger LOG = LoggerFactory.getLogger(MongoTestUtil.class);
 
-  public static void dropCollection(DB db, String collection) {
-    DBCollection collection1 = db.getCollection(collection);
-    if (collection != null) {
-      collection1.drop();
+  public static void dropCollection(DB db, String... collections) {
+    for (String collection : collections) {
+      db.getCollection(collection).drop();
+
     }
   }
+
   public static String loadTo(DB db, String collection,
-      String resourceName, String... references) {
+                              String resourceName, String... references) {
 
     String json = loadFrom(resourceName, references);
-    DBObject parsed = (DBObject) JSON.parse(json);
+
+    DBObject parsed = BasicDBObject.parse(json);
     db.getCollection(collection).insert(parsed);
     String id = ((ObjectId) parsed.get("_id")).toHexString();
     LOG.info("Object {} is inserted to {}", id, collection);

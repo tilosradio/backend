@@ -1,0 +1,47 @@
+{
+  "id": 650,
+  "name": "Sell-Action, avagy: baráti hangok lemezekről...",
+  "definition": "free-style music collection",
+  "alias": "sell-action-avagy-barati-hangok-lemezekrol",
+  "banner": "musorok/650_banner.jpg",
+  "description": "fasza musor",
+  "type": 0,
+  "status": 1,
+  "urls": [
+    {
+      "address": "http://www.hanglemezbarat.blogspot.com/"
+    },
+    {
+      "address": "https://www.mixcloud.com/hanglemezbarat/"
+    },
+    {
+      "address": "https://www.facebook.com/sellaction.tilosradio/"
+    }
+  ],
+  "schedulings": [
+    {
+      "duration": 60,
+      "hourFrom": 9,
+      "weekDay": 6,
+      "weekType": 1,
+      "validFrom": {
+        "$date": "2013-10-06T00:00:00Z"
+      },
+      "base": {
+        "$date": "2013-10-06T00:00:00Z"
+      },
+      "minFrom": 0,
+      "validTo": {
+        "$date": "2030-12-31T00:00:00Z"
+      }
+    }
+  ],
+  "contributors": [
+    {
+      "nick": "Dj Beugró",
+      "author": {
+        "alias": "hanglemezbarat"
+      }
+    }
+  ]
+}

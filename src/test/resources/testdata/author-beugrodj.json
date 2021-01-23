@@ -1,0 +1,31 @@
+{
+  "id": 1109,
+  "user_id": 16,
+  "name": "beugróDJ",
+  "alias": "hanglemezbarat",
+  "photo": "bio/1109.jpg",
+  "avatar": "avatar/1109.jpg",
+  "introduction": "intro",
+  "email": "hanglemezbarat@tilos.hu",
+  "urls": [
+    {
+      "address": "http://www.hanglemezbarat.blogspot.com/",
+      "id": 187
+    }
+  ],
+  "contributions": [
+    {
+      "nick": "Dj Beugró",
+      "show": {
+        "alias": "sell-action-avagy-barati-hangok-lemezekrol",
+        "name": "Sell-Action, avagy: baráti hangok lemezekről...",
+        "ref": {
+          "$ref": "show",
+          "$id": {
+            "$oid": "<REF1>"
+          }
+        }
+      }
+    }
+  ]
+}

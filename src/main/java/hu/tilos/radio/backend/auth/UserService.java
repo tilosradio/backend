@@ -49,12 +49,8 @@ public class UserService {
         return ui;
     }
 
-    public UserInfo me() {
-        final UserInfo userInfo = getCurrentUser();
-        if (userInfo == null) {
-            throw new NotFoundException("User is not logged in");
-        }
-        DBObject userObject = db.getCollection("user").findOne(new BasicDBObject("username", userInfo.getUsername()));
+    public UserInfo getUser(String username) {
+        DBObject userObject = db.getCollection("user").findOne(new BasicDBObject("username", username));
         UserInfo user = mapper.mapUserInfo(userObject);
         AuthUtil.calculatePermissions(user);
         if (userObject.get("author") != null) {
@@ -64,6 +60,14 @@ public class UserService {
         }
         AuthUtil.calculatePermissions(user);
         return user;
+    }
+
+    public UserInfo me() {
+        final UserInfo userInfo = getCurrentUser();
+        if (userInfo == null) {
+            throw new NotFoundException("User is not logged in");
+        }
+        return getUser(userInfo.getUsername());
     }
 
     public List<UserInfo> list() {

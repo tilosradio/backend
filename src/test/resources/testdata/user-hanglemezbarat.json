@@ -1,0 +1,15 @@
+{
+  "id": 16,
+  "role_id": 3,
+  "username": "hanglemezbarat",
+  "password": "xxx",
+  "email": "hanglemezbarat@tilos.hu",
+  "salt": "xxx",
+  "role": null,
+  "author": {
+    "$ref": "show",
+    "$id": {
+      "$oid": "<REF1>"
+    }
+  }
+}

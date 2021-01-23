@@ -1,20 +1,22 @@
 package hu.tilos.radio.backend.data;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 public class ShowReference {
 
-    private DBRef id;
+    @Field(value = "ref",targetType = FieldType.STRING)
+    private String id;
 
     private String name;
 
     private String alias;
 
-    public DBRef getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(DBRef id) {
+    public void setId(String id) {
         this.id = id;
     }
 
