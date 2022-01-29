@@ -1,0 +1,13 @@
+[Unit]
+Description=Tilos Radio backend
+After=syslog.target
+
+[Service]
+User=tilos
+ExecStart=/usr/bin/java jar /home/tilos/prod/backend.jar --spring.config.location=file:/etc/tilos/tilos.properties
+SuccessExitStatus=143
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
