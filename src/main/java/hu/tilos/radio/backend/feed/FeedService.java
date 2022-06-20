@@ -141,7 +141,7 @@ public class FeedService {
             feedUrl = feedUrl + "/" + type;
         }
         feedLink.setHref(uri(feedUrl));
-        feed.addAnyOther(feedLink);
+        feed.getLinks().add(feedLink);
 
         return feed;
     }
@@ -222,10 +222,14 @@ public class FeedService {
         Link feedLink = new Link();
         feedLink.setRel("self");
         feedLink.setType(new MediaType("application", "atom+xml"));
-        feedLink.setHref(uri(serverUrl + "/showFeed/show/" + show.getAlias() + yearPostfix));
+        feedLink.setHref(uri(serverUrl + "/feed/show/" + show.getAlias() + yearPostfix));
 
         feed.getLinks().add(feedLink);
         feed.setId(uri("https://tilos.hu/show/" + show.getAlias() + yearPostfix));
+
+        feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Owner("Tilos Radio", "info@tilos.hu"));
+        feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
+        feed.addAnyOther(new Explicit());
 
         return feed;
 

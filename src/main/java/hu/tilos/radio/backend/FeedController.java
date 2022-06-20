@@ -51,4 +51,9 @@ public class FeedController {
         return feedService.showFeed(show, year, "show-feed");
     }
 
+    @RequestMapping(value = "/feed/show/rss", produces = "text/html")
+    public String showFeedRss() {
+        return "hello world";
+    }
+
 }
