@@ -5,6 +5,7 @@ import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.itunes.Author;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,7 @@ public class FeedRenderer {
 
         feed.setLang("hu");
         feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Owner("Tilos Radio", "info@tilos.hu"));
-        
+
         feed.getAnyOther().add(new Author("Tilos Radio"));
         try {
             feed.setId(new URI(id));
@@ -86,7 +87,7 @@ public class FeedRenderer {
                         e.setSummary(new Summary("adás archívum"));
                     }
 
-                    e.setITunesSummary(e.getSummary().getContent());
+                    e.setITunesSummary(Jsoup.parse(e.getSummary().getContent()).text());
                     e.setITunesDuration(
                         (episode.getRealTo().getTime() - episode.getRealFrom()
                             .getTime()) / 100);
