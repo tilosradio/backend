@@ -136,7 +136,12 @@ public class FeedService {
         Link feedLink = new Link();
         feedLink.setRel("self");
         feedLink.setType(new MediaType("application", "atom+xml"));
-        feedLink.setHref(uri(serverUrl + "/showFeed/tilos" + type == null ? "" : "/type"));
+        String feedUrl = serverUrl + "/feed/podcast";
+        if (type != null) {
+            feedUrl = feedUrl + "/" + type;
+        }
+        feedLink.setHref(uri(feedUrl));
+        feed.addAnyOther(feedLink);
 
         return feed;
     }
