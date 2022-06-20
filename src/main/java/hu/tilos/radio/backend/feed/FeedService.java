@@ -5,9 +5,7 @@ import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.data.types.ShowType;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
-import net.anzix.jaxrs.atom.Feed;
-import net.anzix.jaxrs.atom.Link;
-import net.anzix.jaxrs.atom.MediaType;
+import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.itunes.Category;
 import net.anzix.jaxrs.atom.itunes.Explicit;
 import net.anzix.jaxrs.atom.itunes.Image;
@@ -120,18 +118,19 @@ public class FeedService {
 
         if (type == null) {
             feed.setTitle("Tilos Rádió podcast");
+            feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
         } else if (type.equals("talk")) {
             feed.setTitle("Tilos Rádió szöveges podcast");
             feed.setSubtitle("Válogatás a Tilos Rádió legutóbbi szöveges adásaiból");
+            feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
         } else if (type.equals("music")) {
             feed.setTitle("Tilos Rádió zenés podcast");
             feed.setSubtitle("Válogatás a Tilos Rádió legutóbbi zenés adásaiból");
-
+            feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Music"));
         }
-        feed.addAnyOther(new Category("Podcasts"));
+
         feed.setUpdated(new Date());
         feed.setImage(new Image("https://tilos.hu/images/podcast/tilos.jpg"));
-        feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Public Radio"));
         feed.addAnyOther(new Explicit());
 
         Link feedLink = new Link();
