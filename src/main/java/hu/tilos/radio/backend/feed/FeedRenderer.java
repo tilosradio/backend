@@ -3,7 +3,9 @@ package hu.tilos.radio.backend.feed;
 
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
-import net.anzix.jaxrs.atom.*;
+import net.anzix.jaxrs.atom.Feed;
+import net.anzix.jaxrs.atom.Link;
+import net.anzix.jaxrs.atom.MediaType;
 import net.anzix.jaxrs.atom.itunes.Author;
 import net.anzix.jaxrs.atom.itunes.Duration;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,6 +56,9 @@ public class FeedRenderer {
 
     public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName) {
         Feed feed = new Feed();
+
+        feed.setLang("hu");
+
         feed.getAnyOther().add(new Author("Tilos Radio"));
         try {
             feed.setId(new URI(id));
