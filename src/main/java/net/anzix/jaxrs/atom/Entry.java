@@ -1,5 +1,6 @@
 package net.anzix.jaxrs.atom;
 
+import net.anzix.jaxrs.atom.itunes.Image;
 import org.w3c.dom.Element;
 
 import javax.xml.bind.JAXBContext;
@@ -89,7 +90,7 @@ import java.util.List;
 @XmlRootElement(name = "entry")
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(propOrder = {"title", "links", "categories", "updated", "id", "published", "authors", "ITunesDuration", "contributors", "source",
-        "rights", "content", "summary", "ITunesSummary", "anyOther"})
+        "rights", "content", "summary", "ITunesSummary", "image", "anyOther"})
 public class Entry extends CommonAttributes {
     private List<Person> authors = new ArrayList<Person>();
 
@@ -123,6 +124,8 @@ public class Entry extends CommonAttributes {
     private String iTunesSummary;
 
     private long iTunesDuration;
+
+    private Image image;
 
     @XmlElement(name = "summary", namespace = "http://www.itunes.com/dtds/podcast-1.0.dtd")
     public String getITunesSummary() {
@@ -237,6 +240,15 @@ public class Entry extends CommonAttributes {
 
     public void setSummary(Summary summary) {
         this.summary = summary;
+    }
+
+    @XmlElement(namespace = "http://www.itunes.com/dtds/podcast-1.0.dtd")
+    public Image getImage() {
+        return this.image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     /**

@@ -5,6 +5,7 @@ import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.itunes.Author;
+import net.anzix.jaxrs.atom.itunes.Image;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,11 @@ public class FeedRenderer {
     }
 
     public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName) {
+        FeedService fs = new FeedService();
+        return generateFeed(episodeData, id, selector, format, prefixedWithShowName, fs.getThumbnail());
+    }
+
+    public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName, String defaultThumbnail) {
         Feed feed = new Feed();
 
         feed.setLang("hu");
@@ -74,7 +80,6 @@ public class FeedRenderer {
             List<Person> authors = new ArrayList();
             authors.add(p);
 
-
             for (EpisodeData episode : episodeData) {
                 try {
                     Entry e = new Entry();
@@ -95,6 +100,7 @@ public class FeedRenderer {
 
                     e.setPublished(episode.getRealTo());
                     e.setUpdated(episode.getRealTo());
+                    e.setImage(new Image(episode.getThumbnail(defaultThumbnail)));
 
                     URL url = new URL(serverUrl + "/episode/" + episode.getShow().getAlias() + "/" + YYYY_PER_MM_PER_DD.format(e.getPublished()));
 

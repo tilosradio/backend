@@ -20,7 +20,7 @@ import net.anzix.jaxrs.atom.itunes.Image;
 import net.anzix.jaxrs.atom.itunes.Owner;
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = {"title", "subtitle", "categories", "updated", "id",
+@XmlType(propOrder = {"title", "subtitle", "summary", "ITunesSummary", "categories", "updated", "id",
     "links", "authors", "contributors", "rights", "icon", "logo", "generator",
     "image", "anyOther"})
 @XmlSeeAlso({Owner.class, Author.class, Owner.class, Explicit.class,
@@ -54,6 +54,10 @@ public class Source
   private Image image;
 
   private Category category;
+
+  private Summary summary;
+
+  private String iTunesSummary;
 
   private List<Object> anyOther;
 
@@ -182,4 +186,27 @@ public class Source
   public void setSubtitle(String subtitle) {
     this.subtitle = subtitle;
   }
+
+  public void setITunesSummary(String iTunesSummary) {
+    this.iTunesSummary = iTunesSummary;
+  }
+
+  @XmlElement(
+          name = "summary",
+          namespace = "http://www.itunes.com/dtds/podcast-1.0.dtd"
+  )
+  public String getITunesSummary() {
+    return this.iTunesSummary;
+  }
+
+  @XmlElement
+  public Summary getSummary() {
+    return this.summary;
+  }
+
+  public void setSummary(Summary summary) {
+    this.summary = summary;
+  }
+
+
 }

@@ -8,6 +8,9 @@ import hu.tilos.radio.backend.event.Event;
 import hu.tilos.radio.backend.stat.ListenerStat;
 import hu.tilos.radio.backend.tag.TagData;
 import hu.tilos.radio.backend.data.types.TextData;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -169,5 +172,19 @@ public class EpisodeData extends EpisodeBase {
 
     public void setStatListeners(ListenerStat statListeners) {
         this.statListeners = statListeners;
+    }
+
+    public String getThumbnail(String defaultThumbnail) {
+
+        try {
+            org.jsoup.nodes.Document doc = Jsoup.parse(getText().getContent());
+            for (Element e : doc.select("img")) {
+                return (e.attr("src"));
+            }
+        } catch(NullPointerException e) {
+            return defaultThumbnail;
+        }
+
+        return defaultThumbnail;
     }
 }

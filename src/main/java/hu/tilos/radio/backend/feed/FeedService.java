@@ -5,6 +5,7 @@ import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.data.types.ShowType;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
+import hu.tilos.radio.backend.show.ShowDetailed;
 import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.itunes.Category;
 import net.anzix.jaxrs.atom.itunes.Explicit;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,6 +73,7 @@ public class FeedService {
         feed.setTitle("Tilos Rádió heti podcast");
         feed.setUpdated(new Date());
 
+        feed.setImage(new Image(getThumbnail()));
         feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
         feed.addAnyOther(new Explicit());
 
@@ -129,16 +133,22 @@ public class FeedService {
             feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
         } else if (type.equals("talk")) {
             feed.setTitle("Tilos Rádió szöveges podcast");
-            feed.setSubtitle("Válogatás a Tilos Rádió legutóbbi szöveges adásaiból");
+            String description = "Válogatás a Tilos Rádió legutóbbi szöveges adásaiból";
+            feed.setSubtitle(description);
+            feed.setSummary(new Summary(description));
+            feed.setITunesSummary(description);
             feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
         } else if (type.equals("music")) {
             feed.setTitle("Tilos Rádió zenés podcast");
-            feed.setSubtitle("Válogatás a Tilos Rádió legutóbbi zenés adásaiból");
+            String description = "Válogatás a Tilos Rádió legutóbbi zenés adásaiból";
+            feed.setSubtitle(description);
+            feed.setSummary(new Summary(description));
+            feed.setITunesSummary(description);
             feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Music"));
         }
 
         feed.setUpdated(new Date());
-        feed.setImage(new Image("https://tilos.hu/images/podcast/tilos.jpg"));
+        feed.setImage(new Image(getThumbnail()));
         feed.addAnyOther(new Explicit());
 
         Link feedLink = new Link();
@@ -197,7 +207,7 @@ public class FeedService {
             year = year.substring(1);
         }
 
-        ShowSimple show = mapper.map(db.getCollection("show").findOne(aliasOrId(alias)), ShowSimple.class);
+        ShowDetailed show = mapper.map(db.getCollection("show").findOne(aliasOrId(alias)), ShowDetailed.class);
 
         Date end;
         Date start;
@@ -218,12 +228,16 @@ public class FeedService {
                 episodeData1.getPlannedFrom()));
 
 
-        Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, format, false);
+        Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, format, false, getThumbnail(alias));
 
         //generate header
 
         feed.setTitle(show.getName() + " [Tilos Rádió podcast]");
+        feed.setSummary(new Summary("html", show.getDescription()));
+        feed.setITunesSummary(show.getDefinition());
+
         feed.setUpdated(new Date());
+        feed.setImage(new Image(getThumbnail(alias)));
 
         String yearPostfix = ("".equals(year) ? "" : "/" + year);
 
@@ -261,6 +275,37 @@ public class FeedService {
 
     public void setServerUrl(String serverUrl) {
         this.serverUrl = serverUrl;
+    }
+    public String getThumbnail() {
+        return "https://tilos.hu/upload/episode/tilos-radio.jpg";
+    }
+    public String getThumbnail(String alias) {
+
+        String jpg = "https://tilos.hu/upload/episode-new/" + alias + ".jpg";
+        String png = "https://tilos.hu/upload/episode-new/" + alias + ".png";
+        String defaultUrl = "https://tilos.hu/upload/episode/tilos-radio.jpg";
+
+        if (imageExists(jpg)) { return jpg; }
+        if (imageExists(png)) { return png; }
+
+        return defaultUrl;
+    }
+
+    private boolean imageExists(String urlString) {
+        try {
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.connect();
+            int code = connection.getResponseCode();
+            if (code == 200) {
+                return true;
+            }
+
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
