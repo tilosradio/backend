@@ -95,7 +95,7 @@ public class FeedRenderer {
                     e.setITunesSummary(Jsoup.parse(e.getSummary().getContent()).text());
                     e.setITunesDuration(
                         (episode.getRealTo().getTime() - episode.getRealFrom()
-                            .getTime()) / 100);
+                            .getTime()) / 1000);
 
 
                     e.setPublished(episode.getRealTo());
