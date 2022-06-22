@@ -17,6 +17,8 @@ import java.util.Map;
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class CommonAttributes {
     private URI base;
+
+    private String lang;
     
     private Map extensionAttributes = new HashMap();
 
@@ -27,6 +29,16 @@ public class CommonAttributes {
 
     public void setBase(URI base) {
         this.base = base;
+    }
+
+
+    @XmlAttribute(namespace = "http://www.w3.org/XML/1998/namespace")
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
     @XmlAnyAttribute
