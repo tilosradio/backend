@@ -92,7 +92,10 @@ public class FeedRenderer {
                         e.setSummary(new Summary("adás archívum"));
                     }
 
-                    e.setITunesSummary(Jsoup.parse(e.getSummary().getContent()).text());
+                    if (e.getSummary().getContent() != null) {
+                        e.setITunesSummary(Jsoup.parse(e.getSummary().getContent()).text());
+                    }
+
                     e.setITunesDuration(
                         (episode.getRealTo().getTime() - episode.getRealFrom()
                             .getTime()) / 1000);

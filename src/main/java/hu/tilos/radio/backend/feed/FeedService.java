@@ -135,14 +135,12 @@ public class FeedService {
             feed.setTitle("Tilos Rádió szöveges podcast");
             String description = "Válogatás a Tilos Rádió legutóbbi szöveges adásaiból";
             feed.setSubtitle(description);
-            feed.setSummary(new Summary(description));
             feed.setITunesSummary(description);
             feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
         } else if (type.equals("music")) {
             feed.setTitle("Tilos Rádió zenés podcast");
             String description = "Válogatás a Tilos Rádió legutóbbi zenés adásaiból";
             feed.setSubtitle(description);
-            feed.setSummary(new Summary(description));
             feed.setITunesSummary(description);
             feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Music"));
         }
@@ -233,8 +231,8 @@ public class FeedService {
         //generate header
 
         feed.setTitle(show.getName() + " [Tilos Rádió podcast]");
-        feed.setSummary(new Summary("html", show.getDescription()));
-        feed.setITunesSummary(show.getDefinition());
+        feed.setSubtitle(show.getDefinition());
+        feed.setITunesSummary(show.getDescription());
 
         feed.setUpdated(new Date());
         feed.setImage(new Image(getThumbnail(alias)));
