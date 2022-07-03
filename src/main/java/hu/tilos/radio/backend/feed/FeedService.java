@@ -1,6 +1,12 @@
 package hu.tilos.radio.backend.feed;
 
 import com.mongodb.DB;
+import com.rometools.modules.itunes.EntryInformation;
+import com.rometools.modules.itunes.EntryInformationImpl;
+import com.rometools.modules.itunes.types.Duration;
+import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.io.SyndFeedOutput;
+
 import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.data.types.ShowType;
 import hu.tilos.radio.backend.episode.EpisodeData;
@@ -16,10 +22,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -303,6 +313,71 @@ public class FeedService {
             return false;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public String rss2() {
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        SyndFeed feed = new SyndFeedImpl();
+        feed.setFeedType("rss_2.0");
+
+        feed.setTitle("Sample Feed (created with ROME)");
+        feed.setLink("http://rome.dev.java.net");
+        feed.setDescription("This feed has been created using ROME (Java syndication utilities");
+
+        List entries = new ArrayList();
+        SyndEntry entry;
+        SyndContent description;
+
+
+
+        entry = new SyndEntryImpl();
+        entry.setTitle("ROME v1.0");
+        entry.setLink("http://wiki.java.net/bin/view/Javawsxml/Rome01");
+        try {
+            entry.setPublishedDate(dateFormatter.parse("2004-05-23"));
+        } catch (ParseException e) {
+
+        }
+        description = new SyndContentImpl();
+        description.setType("text/plain");
+        description.setValue("Initial release of ROME");
+        entry.setDescription(description);
+
+        ArrayList modules = new ArrayList();
+        EntryInformation e = new EntryInformationImpl();
+        e.setDuration( new Duration( 10000 ) );
+        e.setExplicit(false);
+        modules.add( e );
+        entry.setModules( modules );
+
+
+        entries.add(entry);
+
+        entry = new SyndEntryImpl();
+        entry.setTitle("ROME v3.0");
+        entry.setLink("http://wiki.java.net/bin/view/Javawsxml/Rome03");
+        try {
+        entry.setPublishedDate(dateFormatter.parse("2004-05-23"));
+        } catch (ParseException e2) {
+
+        }
+        description = new SyndContentImpl();
+        description.setType("text/html");
+        description.setValue("<p>More Bug fixes, mor API changes, some new features and some Unit testing</p>"+
+                "<p>For details check the <a href=\"https://rometools.jira.com/wiki/display/ROME/Change+Log#ChangeLog-Changesmadefromv0.3tov0.4\">Changes Log</a></p>");
+        entry.setDescription(description);
+        entries.add(entry);
+
+        feed.setEntries(entries);
+
+        SyndFeedOutput output = new SyndFeedOutput();
+        try {
+            return output.outputString(feed);
+        } catch (Exception e3) {
+            return "Exception in SyndFeedOutput";
         }
     }
 

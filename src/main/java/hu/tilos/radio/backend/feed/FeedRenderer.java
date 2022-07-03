@@ -6,6 +6,9 @@ import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import net.anzix.jaxrs.atom.*;
 import net.anzix.jaxrs.atom.itunes.Author;
 import net.anzix.jaxrs.atom.itunes.Image;
+
+import com.rometools.rome.feed.rss.Channel;
+
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -59,6 +62,7 @@ public class FeedRenderer {
     }
 
     public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName, String defaultThumbnail) {
+
         Feed feed = new Feed();
 
         feed.setLang("hu");

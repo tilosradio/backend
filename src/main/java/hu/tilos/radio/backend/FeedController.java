@@ -51,4 +51,9 @@ public class FeedController {
         return feedService.showFeed(show, year, "show-feed");
     }
 
+    @RequestMapping(value = "/feed/rss2", produces = "application/rss+xml")
+    public String showRss2Feed() {
+        return feedService.rss2();
+    }
+
 }
