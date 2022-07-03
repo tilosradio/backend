@@ -1,6 +1,12 @@
 package hu.tilos.radio.backend.feed;
 
 
+import com.rometools.modules.itunes.EntryInformation;
+import com.rometools.modules.itunes.EntryInformationImpl;
+import com.rometools.modules.itunes.FeedInformation;
+import com.rometools.modules.itunes.FeedInformationImpl;
+import com.rometools.modules.itunes.types.Duration;
+import com.rometools.rome.feed.synd.*;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.DateFormatUtil;
 import net.anzix.jaxrs.atom.*;
@@ -52,28 +58,43 @@ public class FeedRenderer {
         return d;
     }
 
-    public Feed generateFeed(List<EpisodeData> episodeData, String id, String format) {
+    public SyndFeed generateFeed(List<EpisodeData> episodeData, String id, String format) {
         return generateFeed(episodeData, id, null, format, false);
     }
 
-    public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName) {
+    public SyndFeed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName) {
         FeedService fs = new FeedService();
         return generateFeed(episodeData, id, selector, format, prefixedWithShowName, fs.getThumbnail());
     }
 
-    public Feed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName, String defaultThumbnail) {
+    public SyndFeed generateFeed(List<EpisodeData> episodeData, String id, String selector, String format, boolean prefixedWithShowName, String defaultThumbnail) {
 
-        Feed feed = new Feed();
+        SyndFeed feed = new SyndFeedImpl();
+        feed.setFeedType("rss_2.0");
 
-        feed.setLang("hu");
-        feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Owner("Tilos Radio", "info@tilos.hu"));
+        Feed oldfeed = new Feed();
 
-        feed.getAnyOther().add(new Author("Tilos Radio"));
+        oldfeed.setLang("hu");
+        feed.setLanguage("hu");
+
+        oldfeed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Owner("Tilos Radio", "info@tilos.hu"));
+        oldfeed.getAnyOther().add(new Author("Tilos Radio"));
+
+        ArrayList modules = new ArrayList();
+        FeedInformation feedITunes = new FeedInformationImpl();
+        feedITunes.setOwnerName("Tilos Radio");
+        feedITunes.setOwnerEmailAddress("info@tilos.hu");
+        modules.add(feedITunes);
+
+        feed.setAuthor("Tilos Radio");
+
         try {
-            feed.setId(new URI(id));
+            oldfeed.setId(new URI(id));
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+
+
         try {
 
 
@@ -84,62 +105,116 @@ public class FeedRenderer {
             List<Person> authors = new ArrayList();
             authors.add(p);
 
+            List entries = new ArrayList();
+
             for (EpisodeData episode : episodeData) {
                 try {
-                    Entry e = new Entry();
+
+                    SyndEntry e = new SyndEntryImpl();
+
+                    EntryInformation iTunes = new EntryInformationImpl();
+
+                    Entry olde = new Entry();
                     String prefix = prefixedWithShowName ? episode.getShow().getName() + ": " : "";
+
+
                     if (episode.getText() != null) {
+                        olde.setTitle(prefix + episode.getText().getTitle());
+
+                        String content = episode.getText().getFormatted();
+
+                        olde.setSummary(new Summary("html", content));
+
                         e.setTitle(prefix + episode.getText().getTitle());
-                        e.setSummary(new Summary("html", episode.getText().getFormatted()));
+
+                        if (content != null) {
+                            SyndContent description = new SyndContentImpl();
+                            description.setType("text/html");
+                            description.setValue(content);
+                            e.setDescription(description);
+
+                            iTunes.setSummary((Jsoup.parse(content).text()));
+                        }
+
                     } else {
+                        olde.setTitle(prefix + YYYY_DOT_MM_DOT_DD.format(episode.getPlannedFrom()) + " " + "adásnapló");
+                        olde.setSummary(new Summary("adás archívum"));
+
                         e.setTitle(prefix + YYYY_DOT_MM_DOT_DD.format(episode.getPlannedFrom()) + " " + "adásnapló");
-                        e.setSummary(new Summary("adás archívum"));
+                        SyndContent description = new SyndContentImpl();
+                        description.setType("text/plain");
+                        description.setValue("adás archívum");
+                        e.setDescription(description);
+                        iTunes.setSummary("adás archívum");
                     }
 
-                    if (e.getSummary().getContent() != null) {
-                        e.setITunesSummary(Jsoup.parse(e.getSummary().getContent()).text());
-                    }
 
-                    e.setITunesDuration(
+
+                    olde.setITunesDuration(
                         (episode.getRealTo().getTime() - episode.getRealFrom()
                             .getTime()) / 1000);
 
 
-                    e.setPublished(episode.getRealTo());
-                    e.setUpdated(episode.getRealTo());
-                    e.setImage(new Image(episode.getThumbnail(defaultThumbnail)));
+                    iTunes.setDuration(new Duration((episode.getRealTo().getTime() - episode.getRealFrom()
+                            .getTime()) / 1000));
 
-                    URL url = new URL(serverUrl + "/episode/" + episode.getShow().getAlias() + "/" + YYYY_PER_MM_PER_DD.format(e.getPublished()));
+                    olde.setPublished(episode.getRealTo());
+                    e.setPublishedDate(episode.getRealTo());
+                    olde.setUpdated(episode.getRealTo());
+                    e.setUpdatedDate(episode.getRealTo());
+                    olde.setImage(new Image(episode.getThumbnail(defaultThumbnail)));
+                    iTunes.setImageUri(episode.getThumbnail(defaultThumbnail));
 
-                    e.setId(url.toURI());
+                    URL url = new URL(serverUrl + "/episode/" + episode.getShow().getAlias() + "/" + YYYY_PER_MM_PER_DD.format(olde.getPublished()));
+
+                    olde.setId(url.toURI());
+                    e.setUri(url.toURI().toString());
 
                     Link alternate = new Link();
                     alternate.setRel("alternate");
                     alternate.setType(MediaType.TEXT_HTML_TYPE);
                     alternate.setHref(url.toURI());
-                    e.getLinks().add(alternate);
+                    olde.getLinks().add(alternate);
 
                     Link sound = new Link();
                     sound.setType(new MediaType("audio", "mpeg"));
                     sound.setRel("enclosure");
                     sound.setHref(new URI(createDownloadURI(episode, selector, format)));
-                    e.getLinks().add(sound);
+                    olde.getLinks().add(sound);
 
+                    ArrayList<SyndEnclosure> enclosures = new ArrayList();
+                    SyndEnclosure enclosure = new SyndEnclosureImpl();
+                    enclosure.setUrl(createDownloadURI(episode, selector, format));
+                    enclosure.setType("audio/mpeg");
+                    enclosures.add(enclosure);
+                    e.setEnclosures(enclosures);
 
-                    e.getAuthors().addAll(authors);
+                    e.setAuthor("Tilos Rádió");
 
-                    feed.getEntries().add(e);
+                    olde.getAuthors().addAll(authors);
+
+                    oldfeed.getEntries().add(olde);
+
+                    modules.add( e );
+                    e.setModules( modules );
+
+                    entries.add(e);
+
                 } catch (MalformedURLException e1) {
                     throw new RuntimeException(e1);
                 } catch (URISyntaxException e1) {
                     throw new RuntimeException(e1);
                 }
-
             }
+
+            feed.setEntries(entries);
+
         } catch (Exception ex) {
             ex.printStackTrace();
             //TODO
         }
+
+
         return feed;
     }
 }
