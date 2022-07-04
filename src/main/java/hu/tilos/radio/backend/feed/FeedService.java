@@ -3,40 +3,27 @@ package hu.tilos.radio.backend.feed;
 import com.mongodb.DB;
 import com.rometools.modules.atom.modules.AtomLinkModule;
 import com.rometools.modules.atom.modules.AtomLinkModuleImpl;
-import com.rometools.modules.itunes.EntryInformation;
-import com.rometools.modules.itunes.EntryInformationImpl;
 import com.rometools.modules.itunes.FeedInformation;
 import com.rometools.modules.itunes.FeedInformationImpl;
-import com.rometools.modules.itunes.types.Duration;
 import com.rometools.rome.feed.atom.Link;
-import com.rometools.rome.feed.module.Module;
 import com.rometools.rome.feed.synd.*;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedOutput;
 
-import hu.tilos.radio.backend.data.types.ShowSimple;
 import hu.tilos.radio.backend.data.types.ShowType;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.show.ShowDetailed;
-import net.anzix.jaxrs.atom.*;
-import net.anzix.jaxrs.atom.itunes.Category;
-import net.anzix.jaxrs.atom.itunes.Explicit;
-import net.anzix.jaxrs.atom.itunes.Image;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -263,8 +250,8 @@ public class FeedService {
         feed.setPublishedDate(new Date());
         String yearPostfix = ("".equals(year) ? "" : "/" + year);
 
-        String siteUrl = serverUrl + "/feed/show/" + show.getAlias() + yearPostfix;
-        String feedUrl = serverUrl + "/show/" + show.getAlias();
+        String feedUrl = serverUrl + "/feed/show/" + show.getAlias() + yearPostfix;
+        String siteUrl = serverUrl + "/show/" + show.getAlias();
 
         feed.setUri(feedUrl);
         feed.setLink(siteUrl);
@@ -339,7 +326,7 @@ public class FeedService {
         categories.add(category);
         return categories;
     }
-    
+
     private String outputFeed(SyndFeed feed) {
 
         SyndFeedOutput output = new SyndFeedOutput();
