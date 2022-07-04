@@ -45,15 +45,9 @@ public class FeedController {
         return feedService.showFeed(show, "itunes", "mp3");
     }
 
-
     @RequestMapping(value = "/feed/show/{show}/{year}", produces = "application/atom+rss")
     public String showFeedYearly(@PathVariable String show, @PathVariable String year) {
         return feedService.showFeed(show, year, "show-feed");
-    }
-
-    @RequestMapping(value = "/feed/rss2", produces = "application/rss+xml")
-    public String showRss2Feed() {
-        return feedService.rss2();
     }
 
 }

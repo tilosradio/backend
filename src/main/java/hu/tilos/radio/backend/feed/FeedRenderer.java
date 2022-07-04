@@ -80,13 +80,7 @@ public class FeedRenderer {
         oldfeed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Owner("Tilos Radio", "info@tilos.hu"));
         oldfeed.getAnyOther().add(new Author("Tilos Radio"));
 
-        ArrayList modules = new ArrayList();
-        FeedInformation feedITunes = new FeedInformationImpl();
-        feedITunes.setOwnerName("Tilos Radio");
-        feedITunes.setOwnerEmailAddress("info@tilos.hu");
-        modules.add(feedITunes);
-
-        feed.setAuthor("Tilos Radio");
+        feed.setAuthor(FeedService.DEFAULT_OWNER);
 
         try {
             oldfeed.setId(new URI(id));
@@ -110,9 +104,11 @@ public class FeedRenderer {
             for (EpisodeData episode : episodeData) {
                 try {
 
-                    SyndEntry e = new SyndEntryImpl();
+                    SyndEntry entry = new SyndEntryImpl();
 
+                    List entryModules = entry.getModules();
                     EntryInformation iTunes = new EntryInformationImpl();
+
 
                     Entry olde = new Entry();
                     String prefix = prefixedWithShowName ? episode.getShow().getName() + ": " : "";
@@ -125,13 +121,13 @@ public class FeedRenderer {
 
                         olde.setSummary(new Summary("html", content));
 
-                        e.setTitle(prefix + episode.getText().getTitle());
+                        entry.setTitle(prefix + episode.getText().getTitle());
 
                         if (content != null) {
                             SyndContent description = new SyndContentImpl();
                             description.setType("text/html");
                             description.setValue(content);
-                            e.setDescription(description);
+                            entry.setDescription(description);
 
                             iTunes.setSummary((Jsoup.parse(content).text()));
                         }
@@ -140,11 +136,11 @@ public class FeedRenderer {
                         olde.setTitle(prefix + YYYY_DOT_MM_DOT_DD.format(episode.getPlannedFrom()) + " " + "adásnapló");
                         olde.setSummary(new Summary("adás archívum"));
 
-                        e.setTitle(prefix + YYYY_DOT_MM_DOT_DD.format(episode.getPlannedFrom()) + " " + "adásnapló");
+                        entry.setTitle(prefix + YYYY_DOT_MM_DOT_DD.format(episode.getPlannedFrom()) + " " + "adásnapló");
                         SyndContent description = new SyndContentImpl();
                         description.setType("text/plain");
                         description.setValue("adás archívum");
-                        e.setDescription(description);
+                        entry.setDescription(description);
                         iTunes.setSummary("adás archívum");
                     }
 
@@ -159,16 +155,16 @@ public class FeedRenderer {
                             .getTime()) / 1000));
 
                     olde.setPublished(episode.getRealTo());
-                    e.setPublishedDate(episode.getRealTo());
+                    entry.setPublishedDate(episode.getRealTo());
                     olde.setUpdated(episode.getRealTo());
-                    e.setUpdatedDate(episode.getRealTo());
+                    entry.setUpdatedDate(episode.getRealTo());
                     olde.setImage(new Image(episode.getThumbnail(defaultThumbnail)));
                     iTunes.setImageUri(episode.getThumbnail(defaultThumbnail));
 
                     URL url = new URL(serverUrl + "/episode/" + episode.getShow().getAlias() + "/" + YYYY_PER_MM_PER_DD.format(olde.getPublished()));
 
                     olde.setId(url.toURI());
-                    e.setUri(url.toURI().toString());
+                    entry.setUri(url.toURI().toString());
 
                     Link alternate = new Link();
                     alternate.setRel("alternate");
@@ -186,19 +182,21 @@ public class FeedRenderer {
                     SyndEnclosure enclosure = new SyndEnclosureImpl();
                     enclosure.setUrl(createDownloadURI(episode, selector, format));
                     enclosure.setType("audio/mpeg");
+                    // FIXME: should get the actual length of the file
+                    // enclosure.setLength(123);
                     enclosures.add(enclosure);
-                    e.setEnclosures(enclosures);
-
-                    e.setAuthor("Tilos Rádió");
+                    entry.setEnclosures(enclosures);
 
                     olde.getAuthors().addAll(authors);
 
                     oldfeed.getEntries().add(olde);
 
-                    modules.add( e );
-                    e.setModules( modules );
+                    iTunes.setAuthor(FeedService.DEFAULT_OWNER);
 
-                    entries.add(e);
+                    entryModules.add( iTunes );
+                    entry.setModules( entryModules );
+
+                    entries.add(entry);
 
                 } catch (MalformedURLException e1) {
                     throw new RuntimeException(e1);
