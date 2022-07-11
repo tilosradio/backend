@@ -26,19 +26,19 @@ public class FeedServiceTest {
 
   @Test
   public void testFeed() throws Exception {
-    //given
-    loadTo(mongo, "show", "show-3utas.json");
-
-    feedController.setServerUrl("http://tilos.hu");
-
-    //when
-    Feed feed = (Feed) feedController.showFeed("3utas", null, "show-feed");
-
-    //then
-    JAXBContext jaxbc = JAXBContext.newInstance(Feed.class);
-    Marshaller marshaller = jaxbc.createMarshaller();
-    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-    marshaller.marshal(feed, System.out);
+//    //given
+//    loadTo(mongo, "show", "show-3utas.json");
+//
+//    feedController.setServerUrl("https://tilos.hu");
+//
+//    //when
+//    Feed feed = (Feed) feedController.showFeed("3utas", null, "show-feed");
+//
+//    //then
+//    JAXBContext jaxbc = JAXBContext.newInstance(Feed.class);
+//    Marshaller marshaller = jaxbc.createMarshaller();
+//    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+//    marshaller.marshal(feed, System.out);
 
   }
 }

@@ -1,15 +1,19 @@
 package hu.tilos.radio.backend.feed;
 
 import com.mongodb.DB;
-import hu.tilos.radio.backend.data.types.ShowSimple;
+import com.rometools.modules.atom.modules.AtomLinkModule;
+import com.rometools.modules.atom.modules.AtomLinkModuleImpl;
+import com.rometools.modules.itunes.FeedInformation;
+import com.rometools.modules.itunes.FeedInformationImpl;
+import com.rometools.rome.feed.atom.Link;
+import com.rometools.rome.feed.synd.*;
+import com.rometools.rome.io.FeedException;
+import com.rometools.rome.io.SyndFeedOutput;
+
 import hu.tilos.radio.backend.data.types.ShowType;
 import hu.tilos.radio.backend.episode.EpisodeData;
 import hu.tilos.radio.backend.episode.util.EpisodeUtil;
 import hu.tilos.radio.backend.show.ShowDetailed;
-import net.anzix.jaxrs.atom.*;
-import net.anzix.jaxrs.atom.itunes.Category;
-import net.anzix.jaxrs.atom.itunes.Explicit;
-import net.anzix.jaxrs.atom.itunes.Image;
 import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,6 +35,11 @@ import static hu.tilos.radio.backend.MongoUtil.aliasOrId;
 @Service
 public class FeedService {
 
+    public static final String DEFAULT_OWNER = "Tilos Rádió";
+    public static final String DEFAULT_EMAIL = "info@tilos.hu";
+    public static final String DEFAULT_CATEGORY = "Society & Culture";
+    public static final String DEFAULT_SITE_LINK = "https://tilos.hu/";
+
 
     @Inject
     private EpisodeUtil episodeUtil;
@@ -49,12 +58,14 @@ public class FeedService {
     private DozerBeanMapper mapper;
 
     @Cacheable("feed-weekly")
-    public Feed weeklyFeed(String format) {
+    public String weeklyFeed(String format) {
         return weeklyFeed(null, format);
     }
 
     @Cacheable("feed-weekly-type")
-    public Feed weeklyFeed(String type, String format) {
+    public String weeklyFeed(String type, String format) {
+
+
         Date now = new Date();
         Date weekAgo = new Date();
         weekAgo.setTime(now.getTime() - (long) 604800000L);
@@ -63,46 +74,48 @@ public class FeedService {
 
         Collections.sort(episodes, (episodeData, episodeData2) -> episodeData2.getPlannedFrom().compareTo(episodeData.getPlannedFrom()));
 
-        Feed feed = feedRenderer.generateFeed(episodes,
+        SyndFeed feed = feedRenderer.generateFeed(episodes,
                 "urn:radio-tilos-hu:weekly" + (type == null ? "" : "." + type),
                 "weekly" + (type == null ? "" : "-" + type),
                 format,
                 true);
 
 
+
         feed.setTitle("Tilos Rádió heti podcast");
-        feed.setUpdated(new Date());
+        String description = "Tilos Rádió heti podcast";
+        feed.setDescription(description);
+        feed.setPublishedDate(new Date());
 
-        feed.setImage(new Image(getThumbnail()));
-        feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
-        feed.addAnyOther(new Explicit());
-
-        Link feedLink = new Link();
-        feedLink.setRel("self");
-        feedLink.setType(new MediaType("application", "atom+xml"));
         String feedUrl = serverUrl + "/feed/weekly";
         if (type != null) {
             feedUrl = feedUrl + "/" + type;
         }
-        feedLink.setHref(uri(feedUrl));
-        feed.getLinks().add(feedLink);
 
-        return feed;
+        feed.setLink(serverUrl);
+        feed.setUri(feedUrl);
+
+        List modules = feed.getModules();
+        modules.add(getAtomLinkModule(feedUrl));
+        modules.add(getITunesModule(description, getCategory(), getThumbnail()));
+        feed.setModules(modules);
+
+        return outputFeed(feed);
     }
 
 
     @Cacheable("feed-tilos")
-    public Feed tilosFeed() {
+    public String tilosFeed() {
         return tilosFeed(null, null);
     }
 
     @Cacheable("feed-tilos-type")
-    public Feed tilosFeed(String type) {
+    public String tilosFeed(String type) {
         return tilosFeed(type, "mp3");
     }
 
     @Cacheable("feed-tilos-type-format")
-    public Feed tilosFeed(String type, String format) {
+    public String tilosFeed(String type, String format) {
         Date now = new Date();
         Date weekAgo = new Date();
         weekAgo.setTime(now.getTime() - 3L * 604800000L);
@@ -121,45 +134,47 @@ public class FeedService {
                 .collect(Collectors.toList());
 
 
-        Feed feed = feedRenderer.generateFeed(
+        SyndFeed feed = feedRenderer.generateFeed(
                 episodes,
                 "urn:radio-tilos-hu:podcast" + (type == null ? "" : "." + type)
                 , "podcast" + (type == null ? "" : ("-" + type))
                 , format
                 , true);
 
+
+        FeedInformation iTunes = new FeedInformationImpl();
+        String categoryName = FeedService.DEFAULT_CATEGORY;
+
         if (type == null) {
             feed.setTitle("Tilos Rádió podcast");
-            feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
+            String description = "Válogatás a Tilos Rádió legutóbbi adásaiból";
+            feed.setDescription(description);
         } else if (type.equals("talk")) {
             feed.setTitle("Tilos Rádió szöveges podcast");
             String description = "Válogatás a Tilos Rádió legutóbbi szöveges adásaiból";
-            feed.setSubtitle(description);
-            feed.setITunesSummary(description);
-            feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
+            feed.setDescription(description);
         } else if (type.equals("music")) {
             feed.setTitle("Tilos Rádió zenés podcast");
             String description = "Válogatás a Tilos Rádió legutóbbi zenés adásaiból";
-            feed.setSubtitle(description);
-            feed.setITunesSummary(description);
-            feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Music"));
+            feed.setDescription(description);
+            categoryName = "Music";
         }
 
-        feed.setUpdated(new Date());
-        feed.setImage(new Image(getThumbnail()));
-        feed.addAnyOther(new Explicit());
 
-        Link feedLink = new Link();
-        feedLink.setRel("self");
-        feedLink.setType(new MediaType("application", "atom+xml"));
         String feedUrl = serverUrl + "/feed/podcast";
         if (type != null) {
             feedUrl = feedUrl + "/" + type;
         }
-        feedLink.setHref(uri(feedUrl));
-        feed.getLinks().add(feedLink);
 
-        return feed;
+        feed.setLink(serverUrl);
+        feed.setUri(feedUrl);
+
+        List modules = feed.getModules();
+        modules.add(getAtomLinkModule(feedUrl));
+        modules.add(getITunesModule(feed.getDescription(), getCategory(categoryName), getThumbnail()));
+        feed.setModules(modules);
+
+        return outputFeed(feed);
     }
 
 
@@ -186,17 +201,19 @@ public class FeedService {
     }
 
 
-    public Feed itunesFeed(String alias) {
+    public String itunesFeed(String alias) {
         return showFeed(alias, null, "show-feed");
     }
 
 
     @Cacheable("feed-show")
-    public Feed showFeed(String alias, String selector, String format) {
+    public String showFeed(String alias, String selector, String format) {
         return showFeed(alias, null, selector, format);
     }
 
-    public Feed showFeed(String alias, String year, String selector, String format) {
+    public String showFeed(String alias, String year, String selector, String format) {
+
+
         //{year: (/.*)?
         //,
         if (year == null) {
@@ -226,33 +243,25 @@ public class FeedService {
                 episodeData1.getPlannedFrom()));
 
 
-        Feed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, format, false, getThumbnail(alias));
-
-        //generate header
+        SyndFeed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, format, false, getThumbnail(alias));
 
         feed.setTitle(show.getName() + " [Tilos Rádió podcast]");
-        feed.setSubtitle(show.getDefinition());
-        feed.setITunesSummary(show.getDescription());
-
-        feed.setUpdated(new Date());
-        feed.setImage(new Image(getThumbnail(alias)));
-
+        feed.setDescription(show.getDescription());
+        feed.setPublishedDate(new Date());
         String yearPostfix = ("".equals(year) ? "" : "/" + year);
 
-        Link feedLink = new Link();
-        feedLink.setRel("self");
-        feedLink.setType(new MediaType("application", "atom+xml"));
-        feedLink.setHref(uri(serverUrl + "/feed/show/" + show.getAlias() + yearPostfix));
+        String feedUrl = serverUrl + "/feed/show/" + show.getAlias() + yearPostfix;
+        String siteUrl = serverUrl + "/show/" + show.getAlias();
 
-        feed.getLinks().add(feedLink);
-        feed.setId(uri("https://tilos.hu/show/" + show.getAlias() + yearPostfix));
+        feed.setUri(feedUrl);
+        feed.setLink(siteUrl);
 
-        feed.addAnyOther(new net.anzix.jaxrs.atom.itunes.Category("Society & Culture"));
-        feed.addAnyOther(new Explicit());
+        List modules = feed.getModules();
+        modules.add(getAtomLinkModule(feedUrl));
+        modules.add(getITunesModule(show.getDefinition(), getCategory(), getThumbnail(alias)));
+        feed.setModules(modules);
 
-        return feed;
-
-
+        return outputFeed(feed);
     }
 
     protected Date getNow() {
@@ -306,4 +315,49 @@ public class FeedService {
         }
     }
 
+    private ArrayList<com.rometools.modules.itunes.types.Category> getCategory() {
+        return getCategory(FeedService.DEFAULT_CATEGORY);
+    }
+
+    private ArrayList<com.rometools.modules.itunes.types.Category> getCategory(String categoryName) {
+        ArrayList<com.rometools.modules.itunes.types.Category> categories = new ArrayList();
+        com.rometools.modules.itunes.types.Category category = new com.rometools.modules.itunes.types.Category();
+        category.setName(categoryName);
+        categories.add(category);
+        return categories;
+    }
+
+    private String outputFeed(SyndFeed feed) {
+
+        SyndFeedOutput output = new SyndFeedOutput();
+        try {
+            return output.outputString(feed);
+        } catch (FeedException e) {
+            return e.getMessage();
+        }
+    }
+
+
+    private FeedInformation getITunesModule(String description, ArrayList categories, String imageUrl) {
+        FeedInformation iTunes = new FeedInformationImpl();
+
+        iTunes.setOwnerName(FeedService.DEFAULT_OWNER);
+        iTunes.setOwnerEmailAddress(FeedService.DEFAULT_EMAIL);
+        iTunes.setExplicit(false);
+        iTunes.setSummary(description);
+        iTunes.setCategories(categories);
+        iTunes.setImageUri(imageUrl);
+
+        return iTunes;
+    }
+
+    private AtomLinkModule getAtomLinkModule(String feedUrl) {
+        Link link = new Link();
+        link.setRel("self");
+        link.setType("application/rss+xml");
+        link.setHref(feedUrl);
+        AtomLinkModule atom = new AtomLinkModuleImpl();
+        atom.setLink(link);
+        return atom;
+    }
 }
