@@ -181,7 +181,7 @@ public class EpisodeData extends EpisodeBase {
             for (Element e : doc.select("img")) {
                 return (e.attr("src"));
             }
-        } catch(NullPointerException e) {
+        } catch(NullPointerException|IllegalArgumentException e) {
             return defaultThumbnail;
         }
 
