@@ -99,8 +99,8 @@ public class FeedRenderer {
                         iTunes.setSummary("adás archívum");
                     }
 
-                    iTunes.setDuration(new Duration((episode.getRealTo().getTime() - episode.getRealFrom()
-                            .getTime()) / 1000));
+                    iTunes.setDuration(new Duration(episode.getRealTo().getTime() - episode.getRealFrom()
+                            .getTime()));
 
                     entry.setPublishedDate(episode.getRealTo());
                     entry.setUpdatedDate(episode.getRealTo());
