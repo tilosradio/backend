@@ -246,7 +246,7 @@ public class FeedService {
         SyndFeed feed = feedRenderer.generateFeed(episodeData, "urn:radio-tilos-hu:show." + alias, "show" + "-" + alias + "-" + selector, format, false, getThumbnail(alias));
 
         feed.setTitle(show.getName() + " [Tilos Rádió podcast]");
-        feed.setDescription(show.getDescription());
+        feed.setDescription(show.getAnyDescription());
         feed.setPublishedDate(new Date());
         String yearPostfix = ("".equals(year) ? "" : "/" + year);
 

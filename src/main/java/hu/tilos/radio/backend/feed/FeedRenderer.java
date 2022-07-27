@@ -81,7 +81,12 @@ public class FeedRenderer {
 
                     if (episode.getText() != null) {
                         String content = episode.getText().getFormatted();
-                        entry.setTitle(prefix + episode.getText().getTitle());
+
+                        if (episode.getText().getTitle() != null &&  episode.getText().getTitle() != "null" && !episode.getText().getTitle().isEmpty()) {
+                            entry.setTitle(prefix + episode.getText().getTitle());
+                        } else {
+                            entry.setTitle(prefix + YYYY_DOT_MM_DOT_DD.format(episode.getPlannedFrom()) + " " + "adásnapló");
+                        }
 
                         if (content != null) {
                             SyndContent description = new SyndContentImpl();

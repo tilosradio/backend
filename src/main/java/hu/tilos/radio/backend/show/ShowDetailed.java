@@ -109,6 +109,23 @@ public class ShowDetailed {
         return description;
     }
 
+    public String getAnyDescription() {
+        return getAnyDescription("");
+    }
+
+    public String getAnyDescription(String fallback) {
+        if (description != null && !description.isEmpty()) {
+            return description;
+        }
+        if (definition != null && !definition.isEmpty()) {
+            return definition;
+        }
+        if (name != null && !name.isEmpty()) {
+            return name;
+        }
+        return fallback;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
