@@ -79,8 +79,8 @@ Create a database named `tilos` database and collection named `user`, and add th
     },
   "email": "admin@tilos.hu",
   "username": "admin",
-  "role_id": 2,
-  "role": 2,
+  "role_id": 4,
+  "role": 4,
   "salt": "640894e35ede4192ca179c32eea929f7110be1fa",
   "created": {
     "$date": {

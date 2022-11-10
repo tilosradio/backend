@@ -341,6 +341,7 @@ public class FeedService {
     private FeedInformation getITunesModule(String description, ArrayList categories, String imageUrl) {
         FeedInformation iTunes = new FeedInformationImpl();
 
+        iTunes.setAuthor(FeedService.DEFAULT_OWNER);
         iTunes.setOwnerName(FeedService.DEFAULT_OWNER);
         iTunes.setOwnerEmailAddress(FeedService.DEFAULT_EMAIL);
         iTunes.setExplicit(false);

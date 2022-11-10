@@ -64,7 +64,7 @@ public class FeedRenderer {
         SyndFeed feed = new SyndFeedImpl();
         feed.setFeedType("rss_2.0");
         feed.setLanguage("hu");
-        feed.setAuthor(FeedService.DEFAULT_OWNER);
+        feed.setAuthor(FeedService.DEFAULT_EMAIL);
 
         try {
 
