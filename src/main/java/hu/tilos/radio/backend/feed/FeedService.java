@@ -36,7 +36,7 @@ import static hu.tilos.radio.backend.MongoUtil.aliasOrId;
 public class FeedService {
 
     public static final String DEFAULT_OWNER = "Tilos Rádió";
-    public static final String DEFAULT_EMAIL = "info@tilos.hu";
+    public static final String DEFAULT_EMAIL = "podcast@tilos.hu";
     public static final String DEFAULT_CATEGORY = "Society & Culture";
     public static final String DEFAULT_SITE_LINK = "https://tilos.hu/";
 
