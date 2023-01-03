@@ -229,8 +229,9 @@ public class FeedService {
         if ("".equals(year)) {
             end = getNow();
             //six monthes
-            start = new Date();
-            start.setTime(end.getTime() - (long) 60 * 24 * 30 * 6 * 60 * 1000);
+            //start = new Date();
+            //start.setTime(end.getTime() - (long) 60 * 24 * 30 * 6 * 60 * 1000);
+            start = new Date(1,1,1); // 1901-től, azaz az összes epizódot kérem
         } else {
             int yearInt = Integer.parseInt(year);
             start = new Date(yearInt - 1900, 0, 1);
