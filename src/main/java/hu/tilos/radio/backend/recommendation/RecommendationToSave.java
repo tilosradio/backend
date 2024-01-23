@@ -1,7 +1,6 @@
 package hu.tilos.radio.backend.recommendation;
 
 import hu.tilos.radio.backend.data.Author;
-import hu.tilos.radio.backend.episode.EpisodeSimple;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -15,7 +14,6 @@ public class RecommendationToSave {
     private String description;
     private String link;
     private String image;
-    private EpisodeSimple episode;
     private Date date;
     private String writer;
 
@@ -43,14 +41,6 @@ public class RecommendationToSave {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public EpisodeSimple getEpisode() {
-        return episode;
-    }
-
-    public void setEpisode(EpisodeSimple episode) {
-        this.episode = episode;
     }
 
     public Date getDate() {

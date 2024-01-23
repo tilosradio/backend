@@ -27,8 +27,6 @@ public class RecommendationData {
 
     private String image;
 
-    private String episodeRef;
-
     private Date date;
 
     private Date created;
@@ -69,14 +67,6 @@ public class RecommendationData {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getEpisodeRef() {
-        return episodeRef;
-    }
-
-    public void setEpisodeRef(String episodeRef) {
-        this.episodeRef = episodeRef;
     }
 
     public Date getDate() {
