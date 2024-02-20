@@ -338,7 +338,9 @@ public class EpisodeService {
 
 
         if (entity.getText() != null) {
-            entity.getText().setFormat("markdown");
+            if (entity.getText().getFormat() == null){
+                entity.getText().setFormat("markdown");
+            }
             entity.getText().setType("episode");
         }
         if (entity.getRealFrom() == null) {
@@ -382,7 +384,9 @@ public class EpisodeService {
     public UpdateResponse update(String alias, EpisodeToSave objectToSave) {
 
         if (objectToSave.getText() != null) {
-            objectToSave.getText().setFormat("markdown");
+            if (objectToSave.getText().getFormat() == null){
+                objectToSave.getText().setFormat("markdown");
+            }
             objectToSave.getText().setType("episode");
         }
 

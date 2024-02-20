@@ -47,6 +47,8 @@ public class TextConverter {
             String tagged = tagUtil.htmlize(cleanAt);
             return parseMarkdown(tagged);
 
+        } else if (type.equals("html")){
+            return content;
         }
         throw new IllegalArgumentException("Unkown content type: " + type);
     }
