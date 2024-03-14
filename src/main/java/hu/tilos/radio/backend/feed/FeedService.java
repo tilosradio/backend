@@ -290,13 +290,15 @@ public class FeedService {
     public String getThumbnail(String alias) {
 
         String jpg = "https://tilos.hu/upload/episode-new/" + alias + ".jpg";
-        String png = "https://tilos.hu/upload/episode-new/" + alias + ".png";
-        String defaultUrl = "https://tilos.hu/upload/episode/tilos-radio.jpg";
+//        String png = "https://tilos.hu/upload/episode-new/" + alias + ".png";
 
-        if (imageExists(jpg)) { return jpg; }
-        if (imageExists(png)) { return png; }
-
-        return defaultUrl;
+        return jpg;
+//        String defaultUrl = "https://tilos.hu/upload/episode/tilos-radio.jpg";
+//
+//        if (imageExists(jpg)) { return jpg; }
+//        if (imageExists(png)) { return png; }
+//
+//        return defaultUrl;
     }
 
     private boolean imageExists(String urlString) {
