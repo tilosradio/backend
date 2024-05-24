@@ -12,6 +12,7 @@ public class RecommendationSimple {
     private String image;
     private Date date;
     private AuthorWithContribution author;
+    private Date created;
 
     public String getId() {
         return id;
@@ -79,5 +80,13 @@ public class RecommendationSimple {
 
     public void setWriter(String writer) {
         this.writer = writer;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date createdAt) {
+        this.created = createdAt;
     }
 }

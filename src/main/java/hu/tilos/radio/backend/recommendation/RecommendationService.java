@@ -3,6 +3,7 @@ package hu.tilos.radio.backend.recommendation;
 import com.mongodb.*;
 import hu.tilos.radio.backend.auth.UserInfo;
 import hu.tilos.radio.backend.data.Author;
+import hu.tilos.radio.backend.data.error.NotFoundException;
 import hu.tilos.radio.backend.data.response.CreateResponse;
 import hu.tilos.radio.backend.data.response.OkResponse;
 import hu.tilos.radio.backend.data.response.UpdateResponse;
@@ -35,7 +36,7 @@ public class RecommendationService {
             criteria.put("type", RecommendationType.valueOf(type).ordinal());
         }
 
-        DBCursor selectedRecommendations = db.getCollection(COLLECTION).find(criteria).sort(new BasicDBObject("name", 1));
+        DBCursor selectedRecommendations = db.getCollection(COLLECTION).find(criteria).sort(new BasicDBObject("created", -1));
 
         List<RecommendationSimple> mappedRecommendations = new ArrayList<>();
 
@@ -46,18 +47,22 @@ public class RecommendationService {
             mappedRecommendations.add(mapper.map(selectedRecommendation, RecommendationSimple.class));
         }
 
-        Collections.sort(mappedRecommendations, new Comparator<RecommendationSimple>() {
+        /*Collections.sort(mappedRecommendations, new Comparator<RecommendationSimple>() {
             @Override
             public int compare(RecommendationSimple s1, RecommendationSimple s2) {
                 return s1.getTitle().toLowerCase().compareTo(s2.getTitle().toLowerCase());
             }
-        });
+        });*/
         return mappedRecommendations;
 
     }
 
     public RecommendationData get(String id) {
         DBObject recommendationObject = db.getCollection(COLLECTION).findOne(new BasicDBObject("_id", new ObjectId(id)));
+
+        if (recommendationObject == null) {
+            throw new NotFoundException("Recommendation not found: " + id);
+        }
 
         RecommendationData recommendation = mapper.map(recommendationObject, RecommendationData.class);
 
@@ -67,29 +72,43 @@ public class RecommendationService {
     public CreateResponse create(RecommendationToSave recommendationToSave, UserInfo userInfo) {
         Author author;
 
-        if (recommendationToSave.getAuthor() != null) {
+        /*author = recommendationToSave.getAuthor();*/
+
+        /*if (recommendationToSave.getAuthor() != null) {
             author = recommendationToSave.getAuthor();
         } else if (userInfo.getAuthor() != null) {
             author = userInfo.getAuthor();
         } else {
             throw new RuntimeException("Only authors can create recommendation, or you can specify the author in the request.");
-        }
+        }*/
 
         DBObject recommendation = mapper.map(recommendationToSave, BasicDBObject.class);
 
-        BasicDBObject authorObj = new BasicDBObject();
+        /*BasicDBObject authorObj = new BasicDBObject();
         authorObj.put("alias", author.getAlias());
         authorObj.put("name", author.getName());
         authorObj.put("ref", new DBRef("author", author.getId()));
-        recommendation.put("author", authorObj);
+        recommendation.put("author", authorObj);*/
+
+        recommendation.put("created", new Date());
 
         db.getCollection(COLLECTION).insert(recommendation);
 
         return new CreateResponse(((ObjectId) recommendation.get("_id")).toHexString());
     }
 
-    public UpdateResponse update(String id, RecommendationToSave recommendation) {
-        DBObject recommendationObject = mapper.map(recommendation, BasicDBObject.class);
+    public UpdateResponse update(String id, RecommendationToSave recommendationToSave) {
+        /*Author author = recommendationToSave.getAuthor();*/
+
+        DBObject recommendationObject = mapper.map(recommendationToSave, BasicDBObject.class);
+
+        /*BasicDBObject authorObj = new BasicDBObject();
+        authorObj.put("alias", author.getAlias());
+        authorObj.put("name", author.getName());
+        authorObj.put("ref", new DBRef("author", author.getId()));*/
+        /*recommendationObject.put("author", authorObj);*/
+
+        /*DBObject recommendationObject = mapper.map(recommendationToSave, BasicDBObject.class);*/
         db.getCollection(COLLECTION).update(new BasicDBObject("_id", new ObjectId(id)), recommendationObject);
 
         return new UpdateResponse(true);
