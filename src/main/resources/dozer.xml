@@ -69,10 +69,6 @@
             <a key="type">this</a>
             <b>type</b>
         </field>
-        <field>
-            <a key="author">this</a>
-            <b>author</b>
-        </field>
     </mapping>
 
     <mapping map-null="false">

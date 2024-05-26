@@ -1,6 +1,7 @@
 package hu.tilos.radio.backend.recommendation;
 
-import hu.tilos.radio.backend.author.AuthorWithContribution;
+import hu.tilos.radio.backend.data.Author;
+
 import java.util.Date;
 
 public class RecommendationSimple {
@@ -11,7 +12,7 @@ public class RecommendationSimple {
     private String link;
     private String image;
     private Date date;
-    private AuthorWithContribution author;
+    private Author author;
     private Date created;
 
     public String getId() {
@@ -66,11 +67,11 @@ public class RecommendationSimple {
         this.date = date;
     }
 
-    public AuthorWithContribution getAuthor() {
+    public Author getAuthor() {
         return author;
     }
 
-    public void setAuthor(AuthorWithContribution author) {
+    public void setAuthor(Author author) {
         this.author = author;
     }
 

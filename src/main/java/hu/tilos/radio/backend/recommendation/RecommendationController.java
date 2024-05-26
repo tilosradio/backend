@@ -34,18 +34,18 @@ public class RecommendationController {
     @PreAuthorize("hasRole('ROLE_AUTHOR')")
     @RequestMapping(value = "/api/v1/recommendation", method = RequestMethod.POST)
     public CreateResponse create(@RequestBody @Validated RecommendationToSave recommendation) {
-        return recommendationService.create(recommendation, userService.getCurrentUser());
+        return recommendationService.create(recommendation, userService.getUser(userService.getCurrentUser().getUsername()));
     }
 
     @PreAuthorize("hasRole('ROLE_AUTHOR')")
     @RequestMapping(value = "/api/v1/recommendation/{id}", method = RequestMethod.PUT)
     public UpdateResponse update(@PathVariable String id, @RequestBody @Validated RecommendationToSave recommendation) {
-        return recommendationService.update(id, recommendation);
+        return recommendationService.update(id, recommendation, userService.getUser(userService.getCurrentUser().getUsername()));
     }
 
     @PreAuthorize("hasRole('ROLE_AUTHOR')")
     @RequestMapping(value = "/api/v1/recommendation/{id}", method = RequestMethod.DELETE)
     public OkResponse delete(@PathVariable String id) {
-        return recommendationService.delete(id);
+        return recommendationService.delete(id, userService.getUser(userService.getCurrentUser().getUsername()));
     }
 }
