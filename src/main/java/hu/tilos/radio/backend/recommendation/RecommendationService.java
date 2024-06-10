@@ -106,7 +106,7 @@ public class RecommendationService {
 
         // Is owner
         RecommendationData recommendation = get(id);
-        if (recommendation.getAuthor() != null) {
+        if (recommendation.getAuthor() != null && userInfo.getRole() != Role.ADMIN) {
             Author author = authorRepository.findById(recommendation.getAuthor().getId()).get();
             if (!author.getId().equals(recommendation.getAuthor().getId())) {
                 throw new IllegalArgumentException("You are not the owner of this recommendation");
@@ -127,7 +127,7 @@ public class RecommendationService {
         }
 
         // Is owner
-        if (userInfo.getRole() != Role.ADMIN) {
+        if (recommendation.getAuthor() != null && userInfo.getRole() != Role.ADMIN) {
             Author author = authorRepository.findById(recommendation.getAuthor().getId()).get();
             if (!author.getId().equals(recommendation.getAuthor().getId())) {
                 throw new IllegalArgumentException("You are not the owner of this recommendation");

@@ -62,6 +62,19 @@ public class UserService {
         return user;
     }
 
+    public UserInfo getUserById(String userId) {
+        DBObject userObject = db.getCollection("user").findOne(new BasicDBObject("_id", new ObjectId(userId)));
+        UserInfo user = mapper.mapUserInfo(userObject);
+        AuthUtil.calculatePermissions(user);
+        if (userObject.get("author") != null) {
+            String id = ((ObjectId) ((DBRef) userObject.get("author")).getId()).toHexString();
+            Author one = authorRepository.findById(id).get();
+            user.setAuthor(one);
+        }
+        AuthUtil.calculatePermissions(user);
+        return user;
+    }
+
     public UserInfo me() {
         final UserInfo userInfo = getCurrentUser();
         if (userInfo == null) {
